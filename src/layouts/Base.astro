@@ -1,0 +1,150 @@
+---
+import "../estilos/base.css";
+import { IGLESIA } from "../datos/iglesia";
+import { revisarAntesDePublicar, datosSinConfirmar } from "../lib/candado";
+
+/* Si quedan datos inventados, esto detiene el build de produccion. */
+revisarAntesDePublicar();
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+}
+const { titulo, descripcion } = Astro.props;
+const borrador = datosSinConfirmar();
+
+/* El sitio vive en un subdirectorio, asi que ninguna ruta interna puede empezar
+   por barra. BASE_URL ya trae la barra final cuando hay base configurada. */
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const rutaDe = (archivo: string) => `${base}/${archivo}`;
+/* La barra final NO es cosmetica: sin ella, new URL("tarjeta.jpg", ...) resuelve
+   contra el directorio padre y la tarjeta de WhatsApp apunta a la raiz del
+   dominio, donde no existe. */
+const urlDelSitio = new URL(`${base}/`, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <meta name="theme-color" content="#0a1020" />
+    <link rel="icon" href={rutaDe("favicon.svg")} type="image/svg+xml" />
+    <link rel="canonical" href={urlDelSitio} />
+
+    {
+      /* Mientras los datos sean de muestra, esta pagina NO puede salir en
+         Google: una direccion o un horario inventados en un resultado de
+         busqueda mandan a alguien a una puerta cerrada. Se quita solo cuando la
+         iglesia confirme, porque depende de la misma bandera que la banda. */
+      borrador && <meta name="robots" content="noindex, nofollow" />
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={urlDelSitio} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:locale" content="es_MX" />
+    <!-- La tarjeta que pinta WhatsApp cuando alguien manda la invitacion. Es la
+         unica imagen del sitio y no es una foto: es tipografia y la misma
+         celosia de la portada. -->
+    <meta property="og:image" content={new URL("tarjeta.jpg", urlDelSitio).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Iglesia Cristiana Bethel, Matías Romero. Domingos 10:00." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google no busca "Bethel" para encontrar esta iglesia: busca "iglesia
+         cristiana en Matias Romero". El dato estructurado ayuda a que el mapa
+         local la reconozca, que es donde ocurre el descubrimiento real. -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Church",
+        name: `${IGLESIA.nombreCompleto}, ${IGLESIA.ciudad}`,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: IGLESIA.direccion,
+          addressLocality: IGLESIA.ciudad,
+          addressRegion: IGLESIA.estado,
+          addressCountry: "MX",
+        },
+        telephone: `+52${IGLESIA.telefonoVisible.replace(/\s/g, "")}`,
+      })}
+    />
+  </head>
+
+  <body>
+    <!-- Resplandores de fondo. Se mueven solo con translate3d y scale, que la
+         GPU compone sin repintar. Decorativos, por eso quedan fuera del arbol
+         de accesibilidad. -->
+    <div class="aura" aria-hidden="true">
+      <div class="aura__mancha aura__mancha--1"></div>
+      <div class="aura__mancha aura__mancha--2"></div>
+    </div>
+
+    {
+      borrador && (
+        <div class="borrador no-imprimir" role="status">
+          <strong>Borrador.</strong> Los horarios, la dirección y los nombres de esta página están
+          inventados para poder verla armada. No se puede publicar hasta sustituirlos por los de la
+          iglesia.
+        </div>
+      )
+    }
+
+    <slot />
+
+    <script is:inline>
+      /* En aparatos modestos o con ahorro de datos se apagan las manchas y el
+         vidrio esmerilado pasa a superficie solida. Se marca en el propio
+         documento para que decida el CSS y no el JavaScript.
+         Si alguna de estas APIs no existe (Safari no las expone), no pasa nada:
+         el sitio ya funciona sin ellas, solo no ahorra. */
+      (function () {
+        var c = navigator.connection || {};
+        var pobre =
+          c.saveData === true ||
+          /^(slow-2g|2g|3g)$/.test(c.effectiveType || "") ||
+          (navigator.deviceMemory || 8) <= 2 ||
+          (navigator.hardwareConcurrency || 8) <= 4;
+        if (pobre) document.documentElement.setAttribute("data-ligero", "");
+      })();
+    </script>
+
+    <script>
+      /* Entrada de secciones. El estado base en el CSS es el VISIBLE: si esto no
+         llega, no corre o esta desactivado, se ve todo igual. Donde el navegador
+         soporte linea de tiempo de scroll, el CSS se encarga y esto sobra. */
+      const quietud = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const loHaceElCss = CSS.supports("animation-timeline: view()");
+      if (!quietud && !loHaceElCss) {
+        const vigia = new IntersectionObserver(
+          (entradas) => {
+            for (const e of entradas) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add("visible");
+              vigia.unobserve(e.target);
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        document.querySelectorAll(".entra").forEach((o) => vigia.observe(o));
+      }
+    </script>
+
+    <style>
+      .borrador {
+        background: #7a2540;
+        color: #ffe9f0;
+        font-size: var(--fs-legal);
+        line-height: 1.5;
+        padding: var(--e-3) var(--e-4);
+        text-align: center;
+      }
+    </style>
+  </body>
+</html>

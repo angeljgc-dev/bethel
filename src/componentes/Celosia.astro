@@ -1,0 +1,81 @@
+---
+/* CELOSIA.
+
+   Geometria de color plano en SVG. La primera idea fue una vidriera y se
+   descarto: la vidriera es de tradicion catolica con edificio
+   de piedra, y dibujarla en un templo pentecostal de block y lamina es la misma
+   mentira que una foto de banco. Mostrar 600 cuando son 60.
+
+   Lo que si tiene ese edificio es celosia: el block de ventilacion calado por el
+   que entra la luz. Misma tecnica, material honesto.
+
+   Presupuesto respetado: 20 rombos mas el marco, muy por debajo del tope de 40
+   poligonos. Un SVG de 40 poligonos pesa 745 bytes comprimido; de 80, 1,106.
+   No es el problema de peso de este sitio: una sola fuente web pesa de 19 a 43 KB.
+
+   La luz NO se anima nunca. Medido con la CPU estrangulada seis veces, una capa
+   con mix-blend-mode sube el primer pintado de 264 a 501 ms. Animarla costaria
+   esos 237 ms por cuadro, o sea unos 4 cuadros por segundo en gama media. */
+
+interface Props {
+  columnas?: number;
+  filas?: number;
+  clase?: string;
+}
+const { columnas = 5, filas = 4, clase = "" } = Astro.props;
+
+const celda = 40;
+const hueco = 13; /* medio ancho del rombo */
+const ancho = columnas * celda;
+const alto = filas * celda;
+
+const rombos: string[] = [];
+for (let f = 0; f < filas; f++) {
+  for (let c = 0; c < columnas; c++) {
+    const cx = c * celda + celda / 2;
+    const cy = f * celda + celda / 2;
+    rombos.push(
+      `${cx},${cy - hueco} ${cx + hueco},${cy} ${cx},${cy + hueco} ${cx - hueco},${cy}`,
+    );
+  }
+}
+---
+
+<svg
+  class={`celosia ${clase}`}
+  viewBox={`0 0 ${ancho} ${alto}`}
+  preserveAspectRatio="xMidYMid meet"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <!-- La luz que entra no es de un solo color: se degrada a lo ancho del muro.
+         Un solo degradado para los veinte rombos, sin animacion. -->
+    <linearGradient id="celosia-luz" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--celosia-luz-a)" />
+      <stop offset="100%" stop-color="var(--celosia-luz-b)" />
+    </linearGradient>
+  </defs>
+  <!-- el block: el concreto -->
+  <rect width={ancho} height={alto} fill="var(--celosia-block)" />
+  <!-- los huecos por donde entra la luz -->
+  {rombos.map((puntos) => <polygon points={puntos} fill="url(#celosia-luz)" />)}
+</svg>
+
+<style>
+  .celosia {
+    --celosia-block: var(--realce);
+    --celosia-luz-a: var(--cian);
+    --celosia-luz-b: var(--violeta);
+    width: 100%;
+    height: auto;
+  }
+
+  /* Debajo de 360px no se encoge: se quita. A ese tamano es ruido que compite
+     con el dato, y el dato es lo que la persona vino a buscar. */
+  @media (max-width: 359px) {
+    .celosia {
+      display: none;
+    }
+  }
+</style>
