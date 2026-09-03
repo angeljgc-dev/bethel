@@ -3,3 +3,6 @@ dist/
 .astro/
 .DS_Store
 *.log
+
+# Documentos internos del equipo de rediseño. Nunca se publican.
+.equipo/
