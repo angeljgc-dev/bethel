@@ -28,6 +28,9 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Una linea, antes de pintar: sin esta marca no existe ninguna regla que
+         oculte contenido, asi que sin JavaScript se ve todo. -->
+    <script is:inline>document.documentElement.setAttribute("data-js", "");</script>
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <meta name="theme-color" content="#0a1020" />
@@ -116,12 +119,13 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
     </script>
 
     <script>
-      /* Entrada de secciones. El estado base en el CSS es el VISIBLE: si esto no
-         llega, no corre o esta desactivado, se ve todo igual. Donde el navegador
-         soporte linea de tiempo de scroll, el CSS se encarga y esto sobra. */
+      /* Entrada de secciones. El estado oculto lo activa data-js en el head y
+         lo quita este observador; si algo de esto falla, el CSS sin data-js ya
+         muestra todo. Con movimiento reducido no se oculta nada ni se observa. */
       const quietud = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const loHaceElCss = CSS.supports("animation-timeline: view()");
-      if (!quietud && !loHaceElCss) {
+      if (quietud) {
+        document.documentElement.removeAttribute("data-js");
+      } else {
         const vigia = new IntersectionObserver(
           (entradas) => {
             for (const e of entradas) {

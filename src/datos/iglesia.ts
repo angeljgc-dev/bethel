@@ -125,6 +125,7 @@ export const PREDICAS = [
 ] as const;
 
 /* La razon para creer que le va a servir. Se escribe en humano, nunca como cita
-   de libro y capitulo. Si nadie lo actualiza esa semana, la linea desaparece:
-   nunca se muestra un tema viejo. */
-export const PROXIMO_TEMA = "cuando el dinero no alcanza";
+   de libro y capitulo. Se llena a mano cada semana; si esta vacio, la linea
+   no sale de la invitacion. Va vacio a proposito: antes traia el titulo de una
+   predica ya pasada y la invitacion prometia un tema viejo. */
+export const PROXIMO_TEMA = "";

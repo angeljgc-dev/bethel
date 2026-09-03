@@ -41,7 +41,7 @@
   --whatsapp: #3ddc84; /* sobre texto oscuro da 10.6. El #25D366 de marca no llega */
   --tinta-boton: #071018; /* el texto que va encima de cian y de verde */
 
-  --titulo: "Literata", Georgia, "Times New Roman", serif;
+  --titulo: Georgia, "Times New Roman", serif; /* sin fuente web: la pila del sistema */
   --texto-fuente: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
 
   --fs-legal: 1rem;
@@ -358,38 +358,25 @@ html[data-ligero] .vidrio {
 
 /* ══════════════════════════════════ entrada de secciones
 
-   El estado BASE es el visible. Si el JavaScript no llega o esta apagado, se ve
-   todo. La animacion es la excepcion, no el requisito. */
+   El estado BASE es el visible, y esta vez de verdad: el estado oculto solo se
+   aplica cuando el documento lleva data-js, que lo pone un script de una linea
+   en el head antes de que pinte nada. Sin JavaScript, o si falla, no hay
+   ninguna regla que oculte contenido.
+
+   Antes habia ademas una ruta con animation-timeline: view(). Se quito porque
+   el minificador fusiono animation y animation-timeline en un shorthand que
+   Chrome descarta completo, y como CSS.supports decia que si, el respaldo con
+   IntersectionObserver tampoco entraba: 32 piezas en opacity 0 en produccion.
+   Una sola ruta, observable, medible. */
 @media (prefers-reduced-motion: no-preference) {
-  .entra {
+  html[data-js] .entra {
     opacity: 0;
     transform: translate3d(0, 16px, 0);
     transition:
       opacity 620ms cubic-bezier(0.2, 0.7, 0.2, 1),
       transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  .entra.visible {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .entra {
-      animation: aparecer linear both;
-      animation-timeline: view();
-      animation-range: entry 8% cover 30%;
-      transition: none;
-    }
-  }
-}
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 16px, 0);
-  }
-  to {
+  html[data-js] .entra.visible {
     opacity: 1;
     transform: none;
   }
