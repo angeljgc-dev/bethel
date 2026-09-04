@@ -19,8 +19,8 @@ export default defineConfig({
      sintetiza el navegador.
 
      Las metricas de respaldo (size-adjust, ascent-override, descent-override)
-     son obligatorias: sin ellas el salto de las fuentes medido en las maquetas
-     fue de 0.059 y 0.083 de CLS. Para el cuerpo las genera Astro contra Arial,
+     son obligatorias: sin ellas el salto de las fuentes medido antes de fijar
+     las metricas fue de 0.059 y 0.083 de CLS. Para el cuerpo las genera Astro contra Arial,
      que es la referencia que se pidio. Para el titular la referencia es
      Georgia, que no esta en la tabla de metricas de Astro, asi que su respaldo
      se declara a mano en estilos/base.css con las dos familias medidas. */

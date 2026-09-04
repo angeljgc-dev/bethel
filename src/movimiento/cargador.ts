@@ -120,7 +120,7 @@ export function arrancarMovimiento(): void {
       const gsap = modGsap.gsap;
       const ScrollTrigger = modScroll.ScrollTrigger;
       gsap.registerPlugin(ScrollTrigger);
-      modCoreografia.coreografia(gsap, ScrollTrigger);
+      modCoreografia.coreografia(gsap);
 
       /* Las medidas del scroll se toman con las fuentes puestas: si se toman
          antes, cada bloque de texto cambia de alto al llegar la letra y los

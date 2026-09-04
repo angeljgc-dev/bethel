@@ -4,5 +4,5 @@ dist/
 .DS_Store
 *.log
 
-# Documentos internos del equipo de rediseño. Nunca se publican.
+# Notas de trabajo. Nunca se publican.
 .equipo/

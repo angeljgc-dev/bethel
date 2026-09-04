@@ -58,7 +58,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   <div class="acciones">
     <Boton href="#llegar" variante="principal">Si nunca has venido</Boton>
-    <Boton href={`${base}/domingo.ics`} descarga aviso="descarga un archivo de calendario">
+    <Boton
+      href={`${base}/bethel-domingo.ics`}
+      descarga="bethel-domingo.ics"
+      aviso="descarga un archivo de calendario"
+    >
       Guardar en mi calendario
     </Boton>
   </div>
@@ -74,7 +78,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
        primera pantalla de un telefono con la banda de borrador puesta. */
     gap: 10px;
     padding: 8px 20px 10px;
-    overflow: hidden;
+    /* clip y NO hidden. Con overflow: hidden esta seccion es un contenedor de
+       scroll, y la tarjeta del horario lleva dentro el id #horario, que es el
+       destino del enlace de salto "Ir al horario y la direccion". Al saltar,
+       el navegador desplaza tambien ese contenedor interno para traer el
+       destino a la vista, y ese desplazamiento no se deshace al volver arriba:
+       medido, .portada se quedaba con scrollTop 250 y el titular, el rotulo y
+       la frase de apoyo desaparecian por arriba del recorte. Con clip la caja
+       recorta igual pero no se puede desplazar, asi que no hay nada que se
+       quede corrido. Lo mismo en el resto de secciones que recortan. */
+    overflow: clip;
     isolation: isolate;
   }
 
@@ -186,7 +199,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   }
   .linea {
     display: block;
-    overflow: hidden;
+    overflow: clip;
     padding-bottom: 0.08em;
   }
   .linea > span {

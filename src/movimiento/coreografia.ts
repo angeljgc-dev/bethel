@@ -11,7 +11,6 @@
    JavaScript no queda nada fijado ni recortado. */
 
 type Gsap = typeof import("gsap").gsap;
-type Scroll = typeof import("gsap/ScrollTrigger").ScrollTrigger;
 
 /* La barra fija cambia de alto con el ancho de la pantalla, y de ese alto
    dependen todos los disparadores. Se lee del CSS, no se repite aqui. */
@@ -20,7 +19,11 @@ function altoDeLaBarra(): number {
   return parseFloat(valor) || 64;
 }
 
-export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
+/* Recibe gsap y nada mas. ScrollTrigger no entra por parametro: los
+   disparadores se declaran dentro de cada tween con la clave scrollTrigger, o
+   sea que GSAP lo busca en su registro de complementos. Quien llama tiene que
+   haber hecho gsap.registerPlugin(ScrollTrigger) antes, y lo hace el cargador. */
+export function coreografia(gsap: Gsap): void {
   const mm = gsap.matchMedia();
 
   mm.add("(prefers-reduced-motion: no-preference)", () => {

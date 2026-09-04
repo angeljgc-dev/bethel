@@ -17,7 +17,10 @@ interface Props {
   compacto?: boolean;
   /* Lo que oye quien no ve a donde lleva el boton: "(se abre en WhatsApp)". */
   aviso?: string;
-  descarga?: boolean;
+  /* true descarga con el nombre de la ruta; una cadena fija el nombre del
+     archivo guardado, que es lo unico que renombra la descarga en un sitio
+     estatico (las cabeceras de la Response no sobreviven al build). */
+  descarga?: boolean | string;
   clase?: string;
 }
 
@@ -42,6 +45,6 @@ const clases = ["boton", estilos[variante], compacto && "boton--compacto", clase
   .join(" ");
 ---
 
-<a class={clases} href={href} download={descarga ? true : undefined}>
+<a class={clases} href={href} download={descarga || undefined}>
   <slot />{aviso && <span class="sr"> ({aviso})</span>}
 </a>

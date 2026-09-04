@@ -113,9 +113,16 @@
 }
 
 /* Sin scroll-behavior: smooth en el html. Con el puesto, el snap de la linea de
-   tiempo y los anclajes de la barra pelean por el mismo scroll. */
+   tiempo y los anclajes de la barra pelean por el mismo scroll.
+
+   scroll-padding-top es el alto de la barra mas 8 px de aire. Sin el, cualquier
+   ancla deja su destino justo debajo de la barra pegajosa: medido, el enlace de
+   salto "Ir al contenido" tapaba la banda entera a 390 y 64 px del titular a
+   1280. Va en el html y no destino por destino para que cubra tambien a las
+   anclas que se anadan despues. */
 html {
   scroll-behavior: auto;
+  scroll-padding-top: calc(var(--barra) + 8px);
 }
 
 body {
@@ -272,11 +279,15 @@ img {
 /* --------------------------------------------------------- banda de borrador
 
    Va arriba de todo mientras el candado este puesto, y entra en todas las
-   capturas y mediciones: medir la portada sin ella es medir otra pagina. */
+   capturas y mediciones: medir la portada sin ella es medir otra pagina.
+
+   No es un rotulo ni una leyenda: son varios renglones de prosa que explican
+   que puede creerse el visitante, y el piso del cuerpo de texto es 18 px. A 16
+   px era la unica pieza del sitio por debajo de ese piso. */
 .borrador {
   background: var(--tinta);
   color: var(--cal);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.3;
   padding: 6px 16px;
   text-align: center;

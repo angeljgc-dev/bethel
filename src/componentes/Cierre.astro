@@ -41,9 +41,9 @@ const anio = new Date().getFullYear();
     <div class="cierre__acciones">
       <Boton href={whatsapp} variante="whatsapp" aviso="se abre en WhatsApp">WhatsApp</Boton>
       <Boton
-        href={`${base}/domingo.ics`}
+        href={`${base}/bethel-domingo.ics`}
         variante="claro"
-        descarga
+        descarga="bethel-domingo.ics"
         aviso="descarga un archivo de calendario"
       >
         Guardar en mi calendario
@@ -99,9 +99,10 @@ const anio = new Date().getFullYear();
     <section class="cierre__bloque cierre__bloque--ancho" aria-labelledby="cierre-datos">
       <h3 id="cierre-datos">Tus datos</h3>
       <p>
-        Esta página no tiene formularios y no guarda ningún dato tuyo. Si escribes por WhatsApp,
-        esa conversación queda en la aplicación, que es de Meta. Usamos tu nombre solo para
-        esperarte en la puerta.
+        Esta página no manda nada a ningún lado ni guarda ningún dato tuyo: el nombre que
+        escribes para la invitación se queda en tu teléfono. Si escribes por WhatsApp, esa
+        conversación queda en la aplicación, que es de Meta. Usamos tu nombre solo para esperarte
+        en la puerta.
       </p>
       <p><a href={`${base}/privacidad/`}>Aviso de privacidad</a></p>
     </section>
@@ -109,6 +110,14 @@ const anio = new Date().getFullYear();
 
   <p class="cierre__firma">
     {IGLESIA.nombreCompleto} · {IGLESIA.ciudad}, {IGLESIA.estado} · {anio}
+  </p>
+  <!-- Las dos fuentes se sirven desde este dominio, o sea que se redistribuyen,
+       y la OFL pide que su aviso de copyright y su licencia viajen con ellas.
+       El archivo completo esta en fuentes/LICENCIAS.txt y se publica. -->
+  <p class="cierre__creditos">
+    Tipografía: Fraunces y Atkinson Hyperlegible, <a href={`${base}/fuentes/LICENCIAS.txt`}
+      >SIL Open Font License</a
+    >.
   </p>
 </footer>
 
@@ -198,6 +207,22 @@ const anio = new Date().getFullYear();
     border-top: 1px solid rgba(243, 237, 227, 0.28);
     padding-top: 8px;
     font-size: 16px;
+  }
+  /* Credito de las fuentes: leyenda, con el piso de 16 px, y sin ningun dato de
+     la iglesia encima. El enlace conserva su blanco de 44 px como los demas del
+     cierre, pero el renglon no se separa del pie: es la misma firma. */
+  .cierre__creditos {
+    margin-top: -12px;
+    font-size: 16px;
+    color: var(--luz-clara);
+  }
+  /* El enlace a las licencias es un control como los demas del cierre: 44 px de
+     alto de blanco, no un subrayado de 20. */
+  .cierre__creditos a {
+    color: var(--cal-porton);
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
   }
 
   @media (min-width: 760px) {

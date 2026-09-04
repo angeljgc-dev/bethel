@@ -96,6 +96,29 @@ export function arrancarPolvo(hueco: HTMLElement): () => void {
   };
   medir();
 
+  /* --------------------------------------------------------- calentamiento
+
+     linkProgram no compila de verdad: el controlador difiere el trabajo hasta el
+     primer dibujo que usa el programa, y asignar el buffer de dibujo del tamano
+     de la seccion tampoco es gratis. Hasta aqui las dos cosas se pagaban cuando
+     el canvas entraba en pantalla, o sea a media bajada, y se comian un cuadro.
+
+     Esto es un cuadro completo dibujado FUERA DE PANTALLA: cuando corre, la
+     seccion esta muy por debajo del pliegue y el cargador ya espero a load, al
+     primer hueco de requestIdleCallback y a las fuentes. El finish() esta para
+     que el coste se pague de verdad aqui y no se vuelva a diferir. Es un solo
+     dibujo y no enciende ningun bucle: el bucle sigue colgando del
+     IntersectionObserver, asi que fuera de la seccion el contador de cuadros
+     sigue en cero. */
+  const calentar = () => {
+    gl.uniform1f(uTiempo, 0);
+    gl.uniform1f(uAvance, 0);
+    gl.uniform1f(uInclina, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.finish();
+  };
+  calentar();
+
   /* ------------------------------------------------------------- el avance
 
      De nueve motas a sesenta. Con puntero fino lo manda el scroll: cuanto de la

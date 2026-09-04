@@ -118,7 +118,7 @@ const hay = PREDICAS.length > 0;
     padding: 10px 14px 11px 22px;
     text-decoration: none;
     color: inherit;
-    overflow: hidden;
+    overflow: clip;
     transition:
       transform 180ms ease-out,
       box-shadow 180ms ease-out;
@@ -173,12 +173,16 @@ const hay = PREDICAS.length > 0;
     font-size: clamp(1.35rem, 5.5vw, 1.9rem);
     line-height: 1.06;
   }
+  /* 18 px y no 16: la fecha es el UNICO sitio del sitio donde esta el dato de
+     cuando fue cada domingo, y la regla dice que una leyenda de 16 px nunca es
+     el portador unico de un dato. Sube al piso del cuerpo. Cuesta poco alto
+     porque comparte renglon con la duracion, que ya es mas alta. */
   .predica__fecha {
     grid-area: dura;
     justify-self: end;
     align-self: baseline;
     color: var(--tinta-suave);
-    font-size: 16px;
+    font-size: 18px;
   }
   .predica__resumen {
     grid-area: resumen;

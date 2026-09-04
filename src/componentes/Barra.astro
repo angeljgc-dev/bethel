@@ -21,7 +21,7 @@ const whatsapp = enlaceWhatsApp(IGLESIA.whatsapp, mensajeGeneral(IGLESIA.marca))
 <header class="barra">
   <p class="barra__dato">
     {domingo.dia}s {domingo.hora}
-    <small>· {IGLESIA.colonia}<span class="barra__ciudad">, {IGLESIA.ciudad}</span></small>
+    <small>&#160;· {IGLESIA.colonia}<span class="barra__ciudad">, {IGLESIA.ciudad}</span></small>
   </p>
   <nav class="barra__acciones" aria-label="Contacto">
     <Boton href={whatsapp} variante="whatsapp" compacto aviso="se abre en WhatsApp">
@@ -50,11 +50,17 @@ const whatsapp = enlaceWhatsApp(IGLESIA.whatsapp, mensajeGeneral(IGLESIA.marca))
     font-weight: 700;
     line-height: 1.25;
   }
-  /* La colonia es leyenda, no dato unico: 16 px es su piso. */
+  /* La colonia es leyenda, no dato unico: 16 px es su piso.
+
+     El margen y el espacio duro del <small> no son adorno: el compresor de HTML
+     de Astro borra el salto de linea que separaba "10:00" del punto medio y los
+     dejaba pegados en pantalla y en el texto que lee un lector de pantalla. El
+     espacio duro sobrevive a la compresion y el margen da el aire optico. */
   .barra__dato small {
     font-size: 16px;
     font-weight: 400;
     color: var(--tinta-suave);
+    margin-left: 0.2em;
   }
   /* En dos renglones la ciudad se cae y la colonia se queda: quien lee esto en
      el telefono ya sabe en que pueblo esta. */

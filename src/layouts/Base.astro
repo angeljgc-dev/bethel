@@ -2,8 +2,10 @@
 import { Font } from "astro:assets";
 import "../estilos/base.css";
 import Barra from "../componentes/Barra.astro";
-import { IGLESIA } from "../datos/iglesia";
+import { IGLESIA, CULTOS } from "../datos/iglesia";
 import { revisarAntesDePublicar, datosSinConfirmar } from "../lib/candado";
+
+const domingo = CULTOS.find((c) => c.principal)!;
 
 /* Si quedan datos sin confirmar, esto detiene el build de produccion. */
 revisarAntesDePublicar();
@@ -64,7 +66,11 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <meta name="theme-color" content="#f3ede3" />
-    <link rel="icon" href={rutaDe("favicon.svg")} type="image/svg+xml" />
+    <!-- Un solo icono, escalable, declarado una sola vez. sizes="any" le dice al
+         navegador que este SVG sirve para cualquier tamano y que no busque otro.
+         Medido en la vista previa, tres cargas frias con la pagina recorrida y
+         ocho segundos de espera: una peticion de favicon.svg por carga. -->
+    <link rel="icon" href={rutaDe("favicon.svg")} type="image/svg+xml" sizes="any" />
     <link rel="canonical" href={urlDelSitio} />
 
     <!-- Las dos fuentes salen del propio dominio, con su subconjunto latino y
@@ -91,9 +97,13 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
     <meta property="og:image" content={new URL("tarjeta.jpg", urlDelSitio).href} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <!-- El alt describe la tarjeta que se ve, no lo que la pagina querria que
+         dijera: fondo de cal, la celosia de luz de la portada y las tres lineas
+         de texto, en ese orden. Las tres salen de los mismos datos que la
+         tarjeta, asi que si cambia la hora o la calle, cambia tambien aqui. -->
     <meta
       property="og:image:alt"
-      content={`${IGLESIA.nombreCompleto}, ${IGLESIA.ciudad}. Domingos 10:00.`}
+      content={`Tarjeta de fondo cal con la celosía de luz de la portada. Dice: Aquí se puede llegar cansado. ${domingo.dia}s ${domingo.hora}. ${IGLESIA.calle}, ${IGLESIA.colonia}.`}
     />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -101,6 +111,7 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
          cristiana en Matias Romero". El dato estructurado ayuda a que el mapa
          local la reconozca, que es donde ocurre el descubrimiento real. -->
     <script
+      is:inline
       type="application/ld+json"
       set:html={JSON.stringify({
         "@context": "https://schema.org",
@@ -130,9 +141,9 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
         {
           borrador && (
             <p class="borrador no-imprimir" role="status">
-              <strong>Borrador.</strong> El horario, la dirección y los enlaces de esta página ya
-              son los de la iglesia; lo que falta (por dónde se entra, qué pasa adentro, el salón de
-              niños y quién es quién) sigue sin confirmar. No se publica hasta completarlo.
+              <strong>Borrador.</strong> Son de la iglesia el horario, la dirección, el teléfono y
+              las prédicas. Falta confirmar si ese teléfono recibe WhatsApp y cómo se escribe el
+              correo, y falta lo de adentro: la entrada, qué pasa, los niños y quién es quién.
             </p>
           )
         }

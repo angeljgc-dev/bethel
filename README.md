@@ -1,32 +1,35 @@
-# Iglesia Cristiana Bethel · Matías Romero, Oaxaca
+# Iglesia Casa Bethel ACyM · Matías Romero, Oaxaca
 
 ### 👉 Ver la página: **https://angeljgc-dev.github.io/bethel/**
 
-Sitio de una sola página. Pesa **12 KB comprimido**, en clave oscura, y todo su JavaScript son
-**1,082 bytes en línea**: ningún archivo aparte, ninguna biblioteca.
+Sitio de una sola página para una iglesia real. Pesa **98 KB en total** con todo lo que carga
+después (tipografía, animación y la pieza de luz), y **15 KB** antes del primer pintado.
 
 > ### Esto es un borrador para que la iglesia lo revise
 >
-> **Los horarios, la dirección, los nombres y las prédicas que aparecen están inventados.** Son
-> valores verosímiles, puestos ahí para poder ver la página armada y opinar sobre ella. Ninguno es
-> un dato real de Bethel.
+> **Lo que ya es real y tiene fuente:** el nombre, la dirección (Callejón Ceiba, Los Robles
+> Oriente), el celular publicado, el horario (domingos de 10:00 a 13:00; martes y jueves a las
+> 18:00) y las siete prédicas enlazadas al canal de YouTube de la iglesia.
 >
-> La página lo dice ella misma en una banda roja arriba, y además está marcada para **no salir en
-> Google** mientras siga así: una dirección inventada en un resultado de búsqueda manda a alguien a
-> una puerta cerrada.
+> **Lo que sigue siendo de muestra:** por dónde se entra y cómo es la puerta, qué pasa adentro
+> minuto a minuto, cómo funciona el salón de niños, quién es quién, y si el celular recibe
+> WhatsApp. La página lo dice ella misma en una banda arriba, y está marcada para **no salir en
+> Google** hasta que la iglesia lo confirme.
 
 ## Cómo dar retroalimentación
 
 1. Abre https://angeljgc-dev.github.io/bethel/ en el teléfono, que es donde la va a ver casi todo
    el mundo.
-2. Lee **[docs/PREGUNTAS-PARA-LA-IGLESIA.md](docs/PREGUNTAS-PARA-LA-IGLESIA.md)**: son las
-   preguntas cuyas respuestas sustituyen a los datos inventados, ordenadas por urgencia.
+2. Lee **[docs/PREGUNTAS-PARA-LA-IGLESIA.md](docs/PREGUNTAS-PARA-LA-IGLESIA.md)**: empieza con lo
+   que ya sabemos, para que solo haya que confirmar o corregir, y sigue con lo que falta, en
+   orden de urgencia. Las tres primeras preguntas bloquean el sitio: si el celular recibe
+   WhatsApp, qué nombre se publica, y quién firma el aviso de privacidad.
 3. Cualquier cosa que esté mal, sobre o falte, dila tal cual. La página está hecha para cambiar.
 
 **Lo más importante que hay que corregir primero:** la página afirma que a la mitad del culto se
-pasa una bolsa y que se puede pasar de largo. **Si en Bethel no es así, hay que decirlo.** Afirmar
-"no se pide dinero" cuando sí se pide es una mentira pequeña que anula la credibilidad de las otras
-seis respuestas.
+pasa una bolsa y que se puede pasar de largo. **Si en Casa Bethel no es así, hay que decirlo.**
+Afirmar "no se pide dinero" cuando sí se pide es una mentira pequeña que anula la credibilidad de
+las otras seis respuestas.
 
 ## Qué hace este sitio, y qué no
 
@@ -37,85 +40,86 @@ amigos. La gente no llega a una iglesia por internet.
 Este sitio es el **filtro de verificación**: corre después de que alguien invitó a un conocido y
 antes de que ese conocido se atreva a ir. Su trabajo es **quitar miedo**.
 
-Por eso la pieza más importante no es la portada, es la sección **"Esto es lo que va a pasar"**,
-con el culto desglosado minuto a minuto. De siete sitios de iglesias que se analizaron, dos
-anuncian que responderán las preguntas del visitante nuevo y luego no las responden.
-
-Y por eso existe **"Invita a alguien"**: un botón que arma el mensaje de WhatsApp con horario,
-dirección y el tema de la próxima prédica. El sitio no convence al desconocido, **arma al miembro
-para que lo invite**.
-
-## Decisiones que valen la pena explicar
-
-**Casi cero JavaScript.** Astro sin islas. Ese kilobyte en línea hace dos cosas, y la página
-funciona sin las dos: marca el documento como "ligero" cuando el aparato tiene poca memoria o el
-ahorro de datos activado, y da la entrada de las secciones en los navegadores que todavía no traen
-línea de tiempo de scroll en CSS. El estado base en la hoja de estilos es el **visible**: si el
-script no llega, no corre o está desactivado, se ve todo igual.
-
-**El cuerpo del texto no descarga fuente.** Una sola fuente web con acentos españoles pesa entre
-19 y 43 KB: más que el HTML, el CSS y todo lo demás juntos, entre tres y cinco veces. En Android
-la pila del sistema es Roboto, que esta congregación ya lee todos los días.
-
-**Contraste con piso de 7:1, no de 4.5.** La capacidad de usar un sitio web cae 0.8% por año entre
-los 25 y los 60 años, así que alguien de 60 tiene 28% menos capacidad que alguien de 25. Esta
-congregación envejece. Cuerpo de 18 px mínimo.
-
-**El mapa es una imagen con enlace, no un embebido.** Un iframe de Google Maps pesa más que uno de
-YouTube, y quien busca el mapa quiere llegar, no navegar.
-
-**Las prédicas no llevan reproductor incrustado.** Un iframe de YouTube son 583 KB de red y 2.24 MB
-descomprimidos, incluidos 1.6 MB de JavaScript que hay que ejecutar. Es 3.3 veces el presupuesto
-completo de la página, en una sola sección.
-
-**Hay un archivo de calendario.** No hay conversión el mismo día: la decisión de ir se toma el
-sábado. Un evento en el teléfono con la hora y la dirección es lo único de este sitio que
-sobrevive una semana.
+Por eso la página se lee como un domingo, en orden: llegar, entrar, qué pasa adentro, qué hago con
+mis hijos, qué se oye, a quién vas a ver. Las siete preguntas de quien nunca ha venido están
+contestadas con el dato, no con la promesa del dato. Y al final cambia de lector: **"Invita a
+alguien"** arma el mensaje de WhatsApp con el horario, la dirección y el enlace, para que quien ya
+va pueda invitar con un toque.
 
 ## El concepto visual
 
-La propuesta original era una vidriera. Se descartó: la vidriera es de tradición católica y
-anglicana, con edificio de piedra, y dibujarla en un templo pentecostal de block y lámina es la
-misma mentira que una foto de banco.
+Es un muro encalado a las diez de la mañana de un domingo. La luz entra por la **celosía**, el
+block calado que estos edificios sí tienen, recorre la pared y se queda quieta sobre la hora y la
+dirección: el elemento más bonito de la página señala el dato más útil. Al bajar, esa misma luz se
+encoge hasta el hueco donde irá la foto de la fachada, se cruza un portón para entrar, y en
+"Quiénes somos" se convierte en el polvo que flota en el haz de luz de una sala, con motas que
+pasan de nueve a sesenta con el desplazamiento: las personas con las que empezó y las que hay hoy.
 
-Lo que ese edificio sí tiene es **celosía**, el block de ventilación calado por el que entra la
-luz. Misma técnica de geometría plana en SVG, material honesto. Cincuenta y cuatro rombos y un solo
-degradado, todo dentro del kilobyte.
+Nada de eso toca los datos. La hora, la dirección, los botones y el texto están en su sitio desde
+el primer pintado; lo que se mueve es lo que hay alrededor.
 
-El sitio va en **clave oscura**: azul de noche, cian y violeta. El muro de celosía ocupa la mitad
-derecha de la portada, la franja de luz lo atraviesa y **cae sobre el bloque de horario y
-dirección**, que es el único elemento de la página con halo. El elemento más bonito señala el dato
-más útil.
+## Decisiones que valen la pena explicar
 
-Las tarjetas son de vidrio esmerilado con **opacidad del 86%**, y esa cifra no es estética: con esa
-opacidad el fondo que pasa por detrás aporta solo el 14% del color, así que el contraste del texto
-deja de depender de lo que haya debajo. Vidrio sin esa precaución es contraste no auditable, que es
-justo lo que un piso de 7:1 prohíbe. En aparatos modestos el vidrio pasa a superficie sólida y el
-desenfoque desaparece.
+**Todo el contenido existe sin JavaScript.** Los 140 textos, los enlaces de WhatsApp, el mapa y el
+calendario están en el HTML. El JavaScript hace la página espectacular; no la hace existir. Medido
+con el navegador sin JavaScript: cero textos ocultos.
 
-**El movimiento tiene un límite medido.** Los dos resplandores del fondo se animan solo con
-`translate3d` y `scale`, que la GPU compone sin repintar, y se detienen solos con poca memoria o con
-ahorro de datos. La franja de luz de la portada **no se anima nunca**: con la CPU estrangulada seis
-veces, una capa con mezcla sube el primer pintado de 264 a 501 ms.
+**Con "reducir movimiento" no se carga ni un byte de animación.** Ni la biblioteca de movimiento,
+ni la coreografía, ni la pieza de luz. Cero animaciones, cero llamadas de cuadro, cero contextos
+de dibujo. No se apagan: no se piden.
 
-## Lo que no lleva, a propósito
+**Contraste con piso de 7:1, no de 4.5.** La capacidad de usar un sitio web cae 0.8% por año
+entre los 25 y los 60 años, y esta congregación envejece. Los 126 textos de la página, medidos
+sobre su fondo real (incluida la luz que pasa por detrás), están por encima de 7:1; el par más
+ajustado da 7.13. Cuerpo y notas a 18 px como mínimo; todo lo que se toca mide 44 px o más.
 
-- **Nada de dinero.** Ni donativos, ni diezmos, ni "apóyanos".
-- **Ningún formulario.** Solo el 12% de la gente le da su teléfono a una iglesia. El botón de
-  WhatsApp expone el número de ellos, y así el visitante usa un dato en vez de entregar el suyo.
-  El sitio no recoge nada.
-- **Ninguna foto ni nombre de menor**, tampoco en nombres de archivo ni en texto alternativo.
-- **Nada de jerga.** Ni célula, ni unción, ni avivamiento. Quien nunca ha ido no la entiende y se
-  siente fuera justo cuando queremos que entre.
+**Tipografía propia, con métricas de respaldo.** Fraunces para titulares y Atkinson Hyperlegible
+para el cuerpo (29 KB en dos archivos, licencia SIL Open Font License). Hasta que llegan, Georgia y
+Arial ocupan exactamente el mismo espacio, así que el texto no salta: desplazamiento acumulado de
+cero.
+
+**La pieza de luz pesa 5 KB y se carga cuando la página ya se lee.** Es un programa de dibujo
+escrito a mano, sin bibliotecas 3D (la más común pesa 179 KB). Se detiene cuando sale de pantalla y
+no se pide en teléfonos con poca memoria o con ahorro de datos activado.
+
+**Las prédicas se enlazan, no se incrustan.** Un reproductor de YouTube pesa 583 KB y ejecuta 1.6
+MB de código; un enlace pesa nada. Son servicios completos, de unas dos horas, y así se dice.
+
+**Hay un archivo de calendario.** No hay conversión el mismo día: la decisión de ir se toma el
+sábado. El evento se repite cada domingo, así que sigue siendo correcto en enero.
+
+**Ningún formulario, ninguna foto que no sea de la iglesia.** Solo el 12% de la gente le da su
+teléfono a una iglesia: el sitio expone el número de ellos y no recoge nada. El campo de nombre en
+"Invita a alguien" solo arma el mensaje en el teléfono de la persona; no manda nada a ningún lado.
+No hay fotos de banco haciéndose pasar por la congregación, ni fotos ni nombres de menores. Los
+huecos de foto son piezas terminadas que reciben la foto real cuando la iglesia la mande.
+
+## Medido, no estimado
+
+Chrome con la CPU frenada cuatro veces y red 4G lenta (150 ms de ida y vuelta, 1.6 Mbps), a
+390 × 844, con la banda de borrador puesta, mediana de cinco corridas:
+
+| | Medido | Tope |
+|---|---|---|
+| Primer pintado del elemento más grande | 904 ms | 2,500 ms |
+| Salto de contenido | 0 | 0.1 |
+| Respuesta al toque, mediana | 104 ms | 200 ms |
+| Peso antes del primer pintado | 15 KB | 150 KB |
+| Peso total con todo lo diferido | 98 KB | 600 KB |
+| Desplazamiento con CPU frenada, mediana | 4.2 ms por cuadro | 20 ms |
+| Contraste, 126 textos sobre fondo real | ninguno bajo 7:1 | 7:1 |
+| Con "reducir movimiento" | 0 animaciones, 0 descargas de movimiento | 0 |
+| Sin JavaScript | 0 textos ocultos de 140 | 0 |
+| Teclado | 28 paradas, todas con foco visible | |
+| Anchos de 320 a 1440 | sin desbordar | |
 
 ## Antes de publicar
 
-El build de producción **falla a propósito** mientras los datos sigan inventados:
+El build de producción **falla a propósito** mientras queden datos de muestra:
 
 ```bash
 npm run build
 # PUBLICACION BLOQUEADA
-# Los datos de este sitio estan INVENTADOS para poder verlo armado.
 ```
 
 Para verlo sin publicarlo:
@@ -124,23 +128,28 @@ Para verlo sin publicarlo:
 BETHEL_PERMITIR_INVENTADOS=1 npm run build
 ```
 
-Cuando la iglesia conteste, se sustituyen los datos en `src/datos/iglesia.ts` y se pone
-`CONFIRMADO_POR_LA_IGLESIA = true`. Las preguntas están en
-[docs/PREGUNTAS-PARA-LA-IGLESIA.md](docs/PREGUNTAS-PARA-LA-IGLESIA.md), ordenadas por urgencia.
+Cuando la iglesia conteste, se sustituyen los datos en `src/datos/iglesia.ts` (un solo archivo:
+cambiar la hora ahí cambia la barra, la portada, la invitación y el calendario a la vez) y se pone
+`CONFIRMADO_POR_LA_IGLESIA = true`. Con esa bandera desaparecen solos la banda de aviso y el
+`noindex`.
 
-Al poner esa bandera en `true` desaparecen solos la banda de aviso y el `noindex`, y el sitio
-queda listo para que Google lo indexe.
+## Cómo se publica
+
+Cada push a `main` compila el sitio y lo sube a GitHub Pages
+(`.github/workflows/publicar.yml`). El flujo levanta el candado a propósito, porque esta versión
+está en línea **para revisarse**, no para atender gente. La banda y el `noindex` no dependen de esa
+variable sino de `CONFIRMADO_POR_LA_IGLESIA`, así que siguen puestos hasta que los datos sean los
+de verdad.
 
 ## Sobre el nombre
 
 `bethel.com` es una megaiglesia de California con 14 millones de seguidores, y su sello musical
 tiene 6 millones de suscriptores en YouTube: entre las dos saturan la búsqueda global de la
-palabra. `bethel.org.mx` ya está tomado por otra iglesia en la Ciudad de México, y hay al menos
-cinco congregaciones Bethel en el país.
+palabra. `bethel.org.mx` ya está tomado por otra iglesia en la Ciudad de México.
 
-Por eso el dominio, el título y el H1 llevan **Matías Romero**. No se compite por "Bethel": se
-compite por "iglesia cristiana en Matías Romero". El perfil de Google Business importa más que
-este sitio para el descubrimiento local.
+Por eso el título y el H1 llevan **Matías Romero**. No se compite por "Bethel": se compite por
+"iglesia cristiana en Matías Romero". El perfil de Google Business importa más que este sitio para
+el descubrimiento local, y es una de las tareas de la lista.
 
 ## Cómo correr
 
@@ -149,16 +158,17 @@ npm install
 npm run dev
 ```
 
-## Cómo se publica
+## Licencias
 
-Cada push a `main` compila el sitio y lo sube a GitHub Pages
-(`.github/workflows/publicar.yml`). El flujo levanta el candado a propósito, porque esta versión
-está en línea **para revisarse**, no para atender gente. La banda de aviso y el `noindex` no
-dependen de esa variable sino de `CONFIRMADO_POR_LA_IGLESIA`, así que siguen puestos hasta que los
-datos sean los de verdad.
+- Tipografía: Fraunces y Atkinson Hyperlegible, SIL Open Font License 1.1. El texto de la
+  licencia y los avisos de cada familia están en `public/fuentes/LICENCIAS.txt`.
+- Movimiento: GSAP y ScrollTrigger, licencia estándar de GSAP, sin condición de pago ni de
+  atribución.
+- La pieza de luz está escrita a mano; el ruido que usa es el de Ashima Arts, licencia MIT, con su
+  aviso íntegro dentro del archivo.
 
 ## Documentación
 
-- **[Preguntas para la iglesia](docs/PREGUNTAS-PARA-LA-IGLESIA.md)** · lo que hay que contestar
-  para poder publicar, en orden de urgencia
+- **[Preguntas para la iglesia](docs/PREGUNTAS-PARA-LA-IGLESIA.md)** · lo que ya sabemos y lo que
+  falta, en orden de urgencia
 - [Hallazgos](docs/HALLAZGOS.md) · 14 hechos verificados con fuente que sostienen cada decisión

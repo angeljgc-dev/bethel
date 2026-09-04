@@ -22,12 +22,14 @@ export const INVENTADO = [
   "cual de los dos nombres se publica (IGLESIA.nombreCompleto)",
   "el responsable del aviso de privacidad",
   "COMO_LLEGAR: por donde se entra, como se ve la puerta, donde se estaciona",
+  "COMO_LLEGAR.llegarTarde: confirmar que es cierto que se entra despues de las 10",
   "confirmar si el correo es betherlcasade o bethelcasade",
   "NINOS: si hay salon, edades, quien esta a cargo y como es la entrega",
   "PRIMERA_VEZ.tramos: el minuto a minuto real del domingo",
   "IGLESIA.historia y LIDERAZGO",
   "CULTOS: que es la reunion del martes y la del jueves, y cuanto duran",
   "PRIMERA_VEZ.ofrenda: como es de verdad en Casa Bethel",
+  "PRIMERA_VEZ.vestimenta: como se viste la gente de verdad",
   "ATENCION: quien contesta el WhatsApp y en que horario",
 ];
 
@@ -87,6 +89,17 @@ export const COMO_LLEGAR = {
   estacionamiento: "",
   siSeLlena: "",
   distancia: "",
+  /* La frase grande del cruce, la del panel verde. Decia "Cruzas el porton" y
+     nadie ha dicho que la entrada sea un porton: es la misma invencion que
+     `puerta`, escrita en el tipo mas grande de la pagina. Sale de aqui y
+     mientras este vacia el panel se queda sin frase, que es decorado y no
+     pierde ningun dato. Cuando la iglesia describa su puerta, aqui entra
+     "Cruzas el porton verde", o lo que sea de verdad. MUESTRA: vacia. */
+  cruce: "",
+  /* MUESTRA: nadie ha confirmado que se pueda entrar tarde, y con tres horas de
+     culto es la frase que mas peso carga en la pagina. Ademas viaja dentro del
+     archivo de calendario, que es lo unico que sigue en el telefono de alguien
+     una semana despues. Va en INVENTADO para que el candado la grite. */
   llegarTarde: "Si llegas tarde, entra igual.",
   /* El mapa apunta al pueblo mientras no haya un punto exacto que verificar. */
   mapa: "https://maps.google.com/?q=Callej%C3%B3n+Ceiba+Los+Robles+Oriente+Mat%C3%ADas+Romero+Oaxaca",

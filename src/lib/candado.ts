@@ -199,17 +199,35 @@ export function archivoIcs(opciones: {
      campos y la direccion se pierde a medias. */
   const limpio = (t: string) => t.replace(/([\\,;])/g, "\\$1").replace(/\n/g, "\\n");
 
+  /* DTSTAMP es obligatorio en todo VEVENT segun el RFC 5545, y va en UTC con la
+     Z al final. Google y Apple toleran que falte; Outlook y varios importadores
+     de Android rechazan el evento o lo fechan mal. Es la fecha de compilacion,
+     que es cuando este archivo se escribio de verdad. */
+  const utc = (d: Date) =>
+    [
+      d.getUTCFullYear(),
+      String(d.getUTCMonth() + 1).padStart(2, "0"),
+      String(d.getUTCDate()).padStart(2, "0"),
+      "T",
+      String(d.getUTCHours()).padStart(2, "0"),
+      String(d.getUTCMinutes()).padStart(2, "0"),
+      String(d.getUTCSeconds()).padStart(2, "0"),
+      "Z",
+    ].join("");
+
   /* El aviso cae el dia anterior a las 20:00, que es cuando se decide ir. La
      cuenta sale de la hora del culto y no de un -PT14H escrito a mano: con el
      culto a las 11:30 el aviso sigue cayendo a las 20:00 del sabado. */
   const aviso = h * 60 + m + (24 - 20) * 60;
 
-  return [
+  const lineas = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Bethel//ES",
+    "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `UID:bethel-culto-dominical@bethel`,
+    `DTSTAMP:${utc(ahora)}`,
     `DTSTART:${sello(dom)}`,
     `DTEND:${sello(fin)}`,
     "RRULE:FREQ=WEEKLY;BYDAY=SU",
@@ -223,5 +241,36 @@ export function archivoIcs(opciones: {
     "END:VALARM",
     "END:VEVENT",
     "END:VCALENDAR",
-  ].join("\r\n");
+  ];
+
+  /* El archivo termina en CRLF, tambien la ultima linea: el RFC lo pide y varios
+     validadores lo marcan. */
+  return lineas.map(plegar).join("\r\n") + "\r\n";
+}
+
+/* El RFC 5545 limita cada linea a 75 OCTETOS, no a 75 caracteres: la direccion
+   lleva tildes y una tilde en UTF-8 son dos octetos. La continuacion es CRLF
+   mas un espacio, y el corte no puede caer en medio de un caracter, asi que se
+   mide octeto a octeto sobre la cadena codificada y se corta por caracteres
+   completos.
+
+   Las dos lineas que se pasaban eran LOCATION (82 octetos) y DESCRIPTION (139),
+   que son justo las dos que importan. */
+export function plegar(linea: string): string {
+  const octetos = (t: string) => new TextEncoder().encode(t).length;
+  if (octetos(linea) <= 75) return linea;
+  const trozos: string[] = [];
+  let actual = "";
+  let tope = 75;
+  for (const caracter of linea) {
+    if (octetos(actual + caracter) > tope) {
+      trozos.push(actual);
+      actual = "";
+      /* Las continuaciones llevan un espacio delante, que tambien cuenta. */
+      tope = 74;
+    }
+    actual += caracter;
+  }
+  if (actual) trozos.push(actual);
+  return trozos.join("\r\n ");
 }

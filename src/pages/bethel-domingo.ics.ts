@@ -2,7 +2,13 @@
 
    No hay conversion el mismo dia: la decision de ir a una iglesia se toma el
    sabado, no cuando alguien lee la pagina. Un evento en el telefono con la hora
-   y la direccion es lo unico de este sitio que sobrevive una semana. */
+   y la direccion es lo unico de este sitio que sobrevive una semana.
+
+   El nombre del archivo es el de la ruta y no una cabecera: en un sitio
+   estatico las cabeceras de esta Response se pierden al escribir el archivo a
+   disco, asi que Content-Disposition no llegaba a ninguna parte y lo que se
+   descargaba se llamaba domingo.ics. Con la ruta llamada bethel-domingo.ics el
+   nombre correcto lo da la URL, que es lo que el navegador usa. */
 
 import type { APIRoute } from "astro";
 import { IGLESIA, CULTOS, COMO_LLEGAR } from "../datos/iglesia";

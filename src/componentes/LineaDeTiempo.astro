@@ -71,18 +71,26 @@ const termina = finDe(domingo);
 </section>
 
 <style>
+  /* minmax(0, 1fr) y no la columna por omision: con la coreografia puesta la
+     pista pasa a flex con seis tarjetas de flex: 0 0 auto, y el contenido minimo
+     de esa columna pasa a ser la pista entera. Sin este tope, la columna, y con
+     ella la cabecera y el riel, crecian hasta el ancho de la pista: 1,832 px a
+     390. Medido: el rotulo "13:00" quedaba 1,462 px fuera de la pantalla y el
+     h3 se cortaba a 320. Con el tope, la cabecera mide el ancho de la pantalla
+     menos el padding, y la pista desborda dentro de su propia caja, que es lo
+     que la seccion recorta. */
   .minutos {
     background: var(--techo);
     color: var(--cal-porton);
     padding: 40px 20px 48px;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 22px;
-    overflow: hidden;
+    overflow: clip;
   }
   :global(html[data-anima]) .minutos {
     height: calc(100svh - var(--barra));
     align-content: center;
-    padding-right: 0;
   }
 
   .minutos h3 {
@@ -165,29 +173,43 @@ const termina = finDe(domingo);
     color: var(--cal-porton);
   }
 
-  /* Con la coreografía puesta la misma lista es una pista horizontal. */
+  /* Con la coreografía puesta la misma lista es una pista horizontal. El margen
+     negativo saca la pista del padding de la sección para que las tarjetas
+     lleguen al borde de la pantalla; la cabecera y el riel se quedan dentro del
+     padding, que es lo que antes se perdía cuando la sección entera renunciaba
+     a su padding derecho. Lo que sobresale lo recorta el overflow de la
+     sección. */
   :global(html[data-anima]) .pista {
     display: flex;
     grid-template-columns: none;
     gap: 16px;
+    margin-right: -20px;
     padding-right: 20px;
     will-change: transform;
   }
   /* El ancho de la tarjeta ES el recorrido del pin: seis tarjetas de 78vw piden
-     1,555 px de scroll a 390 y seis de 74vw piden 1,444. Con la pagina completa
-     medida en 14.80 pantallas contra un tope de 14, esos 191 px cuentan. A 74vw
-     el texto del tramo mas largo sigue cabiendo en la tarjeta sin recortarse. */
+     1,555 px de scroll a 390, seis de 74vw piden 1,444 y seis de 66vw piden
+     1,256. Con el tope de 14 pantallas a 390 y la banda de borrador ya en su
+     tamano de cuerpo, esos 188 px son la diferencia entre 14.17 y 13.94.
+
+     El limite de angostar no es horizontal sino vertical: la seccion mide una
+     pantalla menos la barra y recorta lo que sobre, y una tarjeta mas angosta es
+     mas alta. Medido a 320, 375 y 390, y ademas en una pantalla corta de 700 px:
+     el alto del contenido de la seccion nunca pasa del alto de la seccion y
+     ninguna de las seis tarjetas se sale de ella. El texto del tramo mas largo
+     sigue entero, con un renglon mas. */
   :global(html[data-anima]) .tramo {
     flex: 0 0 auto;
-    width: min(74vw, 26rem);
+    width: min(66vw, 26rem);
   }
 
   @media (min-width: 900px) {
     .minutos {
       padding: 72px 64px;
     }
-    :global(html[data-anima]) .minutos {
-      padding-right: 0;
+    :global(html[data-anima]) .pista {
+      margin-right: -64px;
+      padding-right: 64px;
     }
     .riel {
       max-width: 46rem;

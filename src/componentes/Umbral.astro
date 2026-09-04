@@ -19,7 +19,10 @@
    3. Cuánto dura no es un letrero de paso dentro del panel verde: es la
       pregunta 02, con su encabezado, su dato grande y su cuerpo, en su posición
       de reposo. En el panel solo va la frase del cruce, que es decorado y por
-      eso va aria-hidden.
+      eso va aria-hidden. Esa frase sale de `COMO_LLEGAR.cruce` y hoy está
+      vacía: decía "Cruzas el portón" y nadie ha confirmado que la entrada sea
+      un portón. Mientras el dato falte, el panel cruza sin frase; no se pierde
+      ningún dato porque nunca llevó ninguno.
 
    La segunda instancia (`variante="luz"`) es la misma máquina al revés. Aquí el
    panel que se recorta es el de abajo del documento, no el de arriba: crece
@@ -29,7 +32,7 @@
    exactamente como Adentro en la primera instancia) y el que se queda debajo es
    el decorado. Lo que va dentro lo pone quien la usa, por el slot. */
 
-import { CULTOS, PRIMERA_VEZ } from "../datos/iglesia";
+import { CULTOS, PRIMERA_VEZ, COMO_LLEGAR } from "../datos/iglesia";
 import { finDe, duracionEnHoras } from "../lib/candado";
 
 interface Props {
@@ -46,7 +49,7 @@ const dura = duracionEnHoras(domingo.minutos);
   variante === "porton" ? (
     <div class="umbral umbral--porton">
       <div class="umbral__porton" aria-hidden="true">
-        <p class="cruce">Cruzas el portón.</p>
+        {COMO_LLEGAR.cruce && <p class="cruce">{COMO_LLEGAR.cruce}</p>}
       </div>
 
       <section class="umbral__adentro" id="adentro" aria-labelledby="adentro-titulo">
@@ -85,7 +88,7 @@ const dura = duracionEnHoras(domingo.minutos);
      pista y la duración del recorte son el mismo número por construcción. */
   :global(html[data-anima]) .umbral {
     height: calc(100svh - var(--barra));
-    overflow: hidden;
+    overflow: clip;
   }
 
   .umbral__porton,
@@ -103,7 +106,7 @@ const dura = duracionEnHoras(domingo.minutos);
     position: absolute;
     inset: 0;
     padding: 24px 20px;
-    overflow: hidden;
+    overflow: clip;
   }
   /* Adentro está debajo y el portón encima, que es el que se recorta. En la
      variante de la luz los papeles se cambian: el decorado abajo y el panel que
