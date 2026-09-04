@@ -1,0 +1,157 @@
+---
+/* Con los ninos. La pregunta 07, y la seccion mas quieta del sitio.
+
+   Dos cosas la gobiernan y las dos son de contenido, no de diseno:
+
+   1. Un protocolo infantil inventado es una promesa a un padre sobre sus hijos.
+      Mientras NINOS no tenga respuestas, aqui no se escribe ninguna: la seccion
+      se publica reducida a lo que si es verdad (que hay ruido de ninos y no
+      molesta, que se pueden quedar contigo, y que se puede ver el salon antes)
+      y el resto lo contesta el WhatsApp. Cada bloque cuelga de su dato: si el
+      dato esta vacio, el bloque no existe, no queda un titulo con nada debajo.
+   2. Nada se mueve. Ni particulas, ni entradas escalonadas, ni tarjetas que
+      suben. El unico gesto de toda la seccion es un degradado de luz que
+      aparece una sola vez en la parte alta cuando la seccion entra en pantalla,
+      y esta puesto en CSS: la coreografia solo lo trae desde opacidad cero, asi
+      que sin JavaScript ya esta ahi, quieto.
+
+   Regla que se cumple en codigo y no en una nota: ninguna foto de menores, ni
+   en el archivo, ni en el alt, ni en el nombre del archivo. Aqui no hay hueco
+   de foto a proposito. */
+
+import Boton from "./Boton.astro";
+import { IGLESIA, NINOS } from "../datos/iglesia";
+import { enlaceWhatsApp, mensajeNinos } from "../lib/candado";
+
+const salon = enlaceWhatsApp(IGLESIA.whatsapp, mensajeNinos(IGLESIA.marca));
+
+/* Como los cuidamos: solo si hay algo que contar. */
+const cuidado = [NINOS.protocolo, NINOS.dosAdultos].filter(Boolean) as string[];
+const hayResponsables = NINOS.responsables.length > 0;
+---
+
+<section class="ninos" id="ninos" aria-labelledby="ninos-titulo">
+  <div class="ninos__luz" aria-hidden="true"></div>
+
+  <div class="ninos__caja">
+    <p class="rotulo">Con los niños · 7 de 7</p>
+    <h2 id="ninos-titulo">¿Qué hago con mis hijos?</h2>
+
+    {NINOS.edades && <p class="ninos__dato">{NINOS.edades}</p>}
+    {NINOS.salon && <p>{NINOS.salon}</p>}
+    <p>{NINOS.quedarse}</p>
+
+    {
+      cuidado.length > 0 && (
+        <div class="ninos__bloque">
+          <h3>Cómo los cuidamos</h3>
+          {cuidado.map((linea) => (
+            <p>{linea}</p>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      hayResponsables && (
+        <div class="ninos__bloque">
+          <h3>Los adultos responsables</h3>
+          <ul class="ninos__gente">
+            {NINOS.responsables.map((p) => (
+              <li>
+                <b>{p.nombre}</b> {p.funcion}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    <p class="ninos__pista">{NINOS.aviso}</p>
+
+    <div>
+      <Boton href={salon} variante="whatsapp" aviso="se abre en WhatsApp">
+        Quiero conocer el salón antes
+      </Boton>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ninos {
+    position: relative;
+    background: var(--cal);
+    color: var(--tinta);
+    /* El padding de arriba no es ritmo: es la distancia medida a la que el
+       degradado ya vale cero. Con el texto empezando a 64 px, el rotulo caia
+       dentro de la luz y su contraste sobre el fondo real bajaba a 6.73, por
+       debajo del piso de 7. Ahora el degradado termina a 72 px y el primer
+       texto empieza a 84. */
+    padding: 84px 20px 40px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* El unico gesto de la seccion. Es un degradado, no una imagen y no una
+     particula, y en reposo ya esta puesto: la coreografia solo lo trae desde
+     opacidad cero una vez. No pasa por debajo de ninguna letra: mide 72 px y
+     el primer texto empieza a 84, medido. */
+  .ninos__luz {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 72px;
+    z-index: 0;
+    background: linear-gradient(180deg, rgba(242, 193, 94, 0.3), transparent 92%);
+    pointer-events: none;
+  }
+
+  .ninos__caja {
+    position: relative;
+    z-index: 1;
+    max-width: 34rem;
+    display: grid;
+    gap: 11px;
+  }
+  .ninos h2 {
+    font-size: clamp(2.1rem, 8.5vw, 4.4rem);
+    margin: 6px 0 4px;
+  }
+  .ninos__dato {
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    line-height: 1.1;
+  }
+  .ninos__bloque {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .ninos__bloque h3 {
+    font-size: 1.5rem;
+  }
+  .ninos__gente {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .ninos__gente b {
+    font-family: var(--titular);
+    font-weight: 600;
+  }
+  /* Pista, no leyenda: es cuerpo y no baja de 18 px. */
+  .ninos__pista {
+    color: var(--tinta-suave);
+    margin-top: 6px;
+  }
+
+  @media (min-width: 900px) {
+    .ninos {
+      padding: 152px 64px 104px;
+    }
+    .ninos__luz {
+      height: 132px;
+    }
+  }
+</style>

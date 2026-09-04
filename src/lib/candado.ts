@@ -78,6 +78,14 @@ export function mensajeVisita(marca: string): string {
   return `Hola. Vi la página de ${marca} y quiero ir el domingo. ¿Alguien me puede recibir en la puerta?`;
 }
 
+/* El de un padre o una madre que quiere ver el salon antes de dejar ahi a sus
+   hijos. Va aparte del general porque la respuesta la da otra persona y porque
+   mientras el protocolo de ninos siga sin confirmar, este mensaje ES la
+   seccion: es lo unico que se puede prometer sin inventar nada. */
+export function mensajeNinos(marca: string): string {
+  return `Hola. Vi la página de ${marca}. Quiero conocer el salón de niños antes de llevar a mis hijos.`;
+}
+
 /* La invitacion de un miembro a un conocido. Las tres condiciones que documenta
    la investigacion estan las tres: alguien de confianza invita, se ofrece a
    acompanar, y hay una razon para creer que le sirve (el tema, escrito en
@@ -94,19 +102,55 @@ export function invitacion(opciones: {
   fin: string;
   tema?: string;
   sitio: string;
+  /* El nombre de quien lo recibe. Es opcional a proposito: el enlace tiene que
+     estar armado y completo en el HTML, sin JavaScript, y el nombre solo se le
+     suma si la persona lo escribe. */
+  nombre?: string;
 }): string {
-  const { marca, colonia, calle, hora, fin, tema, sitio } = opciones;
+  return `https://wa.me/?text=${encodeURIComponent(textoDeInvitacion(opciones))}`;
+}
+
+/* El texto, aparte del enlace, porque la pagina lo imprime tal cual dentro de la
+   tarjeta: lo que se ve es exactamente lo que se manda, no una version bonita. */
+export function textoDeInvitacion(opciones: {
+  marca: string;
+  colonia: string;
+  calle: string;
+  hora: string;
+  fin: string;
+  tema?: string;
+  sitio: string;
+  nombre?: string;
+}): string {
+  return lineasDeInvitacion(opciones).join("\n");
+}
+
+export function lineasDeInvitacion(opciones: {
+  marca: string;
+  colonia: string;
+  calle: string;
+  hora: string;
+  fin: string;
+  tema?: string;
+  sitio: string;
+  nombre?: string;
+}): string[] {
+  const { marca, colonia, calle, hora, fin, tema, sitio, nombre } = opciones;
+  const saludo = nombre ? `Hola, ${nombre}.` : "Hola.";
+  /* "en el callejon Ceiba", no "en el callejon ceiba": lo que se pone en
+     minusculas es la palabra generica, no el nombre propio de la calle. */
+  const enLaCalle = calle.replace(/^(Callejón|Calle|Avenida|Av\.)/, (m) => m.toLowerCase());
   /* El permiso de irse antes va en la invitacion: con tres horas es la
      diferencia entre invitar y comprometer a alguien que no conoce a nadie. */
   const lineas = [
-    `Hola. Este domingo voy a ${marca}, aquí en ${colonia}.`,
-    `Es de ${hora} a ${fin}, en el ${calle.toLowerCase()}. Puedes irte antes si necesitas.`,
+    `${saludo} Este domingo voy a ${marca}, aquí en ${colonia}.`,
+    `Es de ${hora} a ${fin}, en el ${enLaCalle}. Puedes irte antes si necesitas.`,
     ``,
     `Si quieres paso por ti y entramos juntos. No tienes que hacer nada ni decir nada allá.`,
   ];
   if (tema) lineas.push(``, `Este domingo hablan de: ${tema}.`);
   lineas.push(``, `Dónde es y qué pasa exactamente, aquí: ${sitio}`);
-  return `https://wa.me/?text=${encodeURIComponent(lineas.join("\n"))}`;
+  return lineas;
 }
 
 /* ---------------------------------------------------------------- calendario
@@ -127,8 +171,9 @@ export function archivoIcs(opciones: {
   direccion: string;
   hora: string;
   minutos: number;
+  descripcion?: string;
 }): string {
-  const { titulo, direccion, hora, minutos } = opciones;
+  const { titulo, direccion, hora, minutos, descripcion } = opciones;
   const [h, m] = hora.split(":").map(Number);
 
   /* primera ocurrencia: el domingo siguiente a la compilacion */
@@ -149,6 +194,16 @@ export function archivoIcs(opciones: {
       "00",
     ].join("");
 
+  /* En un .ics la coma, el punto y coma y la barra invertida son separadores: si
+     no se escapan, "Callejon Ceiba, Los Robles Oriente" llega partido en dos
+     campos y la direccion se pierde a medias. */
+  const limpio = (t: string) => t.replace(/([\\,;])/g, "\\$1").replace(/\n/g, "\\n");
+
+  /* El aviso cae el dia anterior a las 20:00, que es cuando se decide ir. La
+     cuenta sale de la hora del culto y no de un -PT14H escrito a mano: con el
+     culto a las 11:30 el aviso sigue cayendo a las 20:00 del sabado. */
+  const aviso = h * 60 + m + (24 - 20) * 60;
+
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -158,8 +213,14 @@ export function archivoIcs(opciones: {
     `DTSTART:${sello(dom)}`,
     `DTEND:${sello(fin)}`,
     "RRULE:FREQ=WEEKLY;BYDAY=SU",
-    `SUMMARY:${titulo}`,
-    `LOCATION:${direccion}`,
+    `SUMMARY:${limpio(titulo)}`,
+    `LOCATION:${limpio(direccion)}`,
+    ...(descripcion ? [`DESCRIPTION:${limpio(descripcion)}`] : []),
+    "BEGIN:VALARM",
+    "ACTION:DISPLAY",
+    `TRIGGER:-PT${Math.floor(aviso / 60)}H${aviso % 60}M`,
+    `DESCRIPTION:${limpio(titulo)}`,
+    "END:VALARM",
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");

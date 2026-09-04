@@ -28,6 +28,11 @@
   --tinta: #1c221f; /* 13.89 sobre cal */
   --tinta-suave: #3d4441; /* 8.58 sobre cal */
   --ocre: #6b4708; /* rotulos. 7.13 sobre cal, el par mas ajustado del sitio */
+  /* El mismo ocre un tono mas hondo, para las superficies de cal-sombra. El
+     ocre de arriba esta medido contra cal y solo contra cal: sobre cal-sombra
+     baja a 6.16 y deja de cumplir el piso de 7. Este mide 7.19 sobre
+     cal-sombra, y se usa unicamente ahi. */
+  --ocre-hondo: #5e3e06;
   --techo-suave: #d5dcd7; /* 12.06 sobre techo */
   --cal-porton: #f3ede3; /* 8.62 sobre porton */
 

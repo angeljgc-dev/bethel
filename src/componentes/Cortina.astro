@@ -1,0 +1,43 @@
+---
+/* La cortina de cal.
+
+   El cambio de Quienes somos a Invita a alguien no es un recorrido, es un
+   cambio de lector: hasta aqui la pagina le habla a quien nunca ha venido, y de
+   aqui en adelante le habla a quien ya viene. Por eso no lleva scrub: sube una
+   sola vez, en 0.8 s, cuando la seccion llega.
+
+   Como esta armada, que es lo que la hace segura:
+
+   - la franja oscura de arriba de la seccion es del color del techo y esta
+     vacia: no hay ni una letra debajo de la cortina;
+   - la cortina solo existe con html[data-js]. Sin JavaScript no hay cortina y
+     lo que queda es un corte limpio de techo a cal, 120 px mas abajo;
+   - en reposo la cortina ya esta puesta (arriba del todo, tapando la franja).
+     La coreografia solo la trae desde abajo con gsap.from, asi que si GSAP no
+     llega, la seccion se ve exactamente igual que al final del gesto. */
+---
+
+<div class="cortina-cal" aria-hidden="true"></div>
+
+<style>
+  .cortina-cal {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 72px;
+    background: var(--cal);
+    pointer-events: none;
+    z-index: 1;
+  }
+  :global(html[data-js]) .cortina-cal {
+    display: block;
+  }
+
+  @media (min-width: 900px) {
+    .cortina-cal {
+      height: 160px;
+    }
+  }
+</style>

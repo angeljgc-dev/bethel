@@ -28,6 +28,7 @@ export const INVENTADO = [
   "IGLESIA.historia y LIDERAZGO",
   "CULTOS: que es la reunion del martes y la del jueves, y cuanto duran",
   "PRIMERA_VEZ.ofrenda: como es de verdad en Casa Bethel",
+  "ATENCION: quien contesta el WhatsApp y en que horario",
 ];
 
 export const IGLESIA = {
@@ -223,6 +224,28 @@ export const PREDICAS = [
     resumen: "El hombre que cargó la cruz de Jesús sin haberlo pedido, y lo que eso le dejó.",
   },
 ] as const;
+
+/* Quien contesta y en que horario. MUESTRA vacio los dos: el sitio viejo decia
+   "Contesta Hermana Lupita", que es tratamiento de adentro y ademas un nombre
+   inventado. Mientras esten vacios, el cierre publica los tres contactos sin
+   prometer a que hora contesta nadie. */
+export const ATENCION = {
+  quien: "",
+  horario: "",
+} as const;
+
+/* El aviso de privacidad. Es obligatorio desde el 21 de marzo de 2025 aunque el
+   sitio no tenga formularios, y sin responsable no cumple: por eso responsable
+   esta en la lista de INVENTADO y no se rellena con nada.
+
+   actualizado vacio quiere decir "todavia no se ha publicado": la pagina lo dice
+   asi en vez de estampar la fecha de compilacion, que seria una fecha inventada
+   distinta cada vez que alguien recompila. */
+export const PRIVACIDAD = {
+  responsable: "",
+  domicilio: "",
+  actualizado: "",
+} as const;
 
 /* La razon para creer que le va a servir. Se escribe en humano, nunca como cita
    de libro y capitulo. Se llena a mano cada semana; si esta vacio, la linea

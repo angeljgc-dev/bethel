@@ -1,0 +1,245 @@
+---
+/* Los domingos grabados.
+
+   Siete servicios reales del canal de la iglesia. Tres decisiones que no son de
+   diseno y que se sostienen con numeros:
+
+   1. **Sin reproductor incrustado.** Un iframe de YouTube son 583 KB y se lleva
+      el presupuesto entero de la pagina (600 KB con todo lo diferido). Cada
+      renglon es un enlace y ya.
+   2. **La duracion va delante y en grande.** Son grabaciones completas de 91 a
+      128 minutos, no sermones de 40. Si alguien abre el enlace esperando algo
+      corto y se encuentra dos horas, la pagina le mintio sin querer. El aviso va
+      antes de que le den clic, en el texto de entrada y en cada tarjeta.
+   3. **Ninguna linea promete lo que la predica va a hacer por ti.** Se dice de
+      que habla y se acaba. Y no se dice que la lista se actualiza sola, porque
+      no hay codigo que lo haga.
+
+   Toda la tarjeta es el enlace: en un telefono, un enlace de una linea dentro de
+   una tarjeta es un blanco de 21 px y aqui el blanco es la tarjeta entera. */
+
+import { IGLESIA, PREDICAS } from "../datos/iglesia";
+
+const hay = PREDICAS.length > 0;
+---
+
+<section class="predicas" id="predicas" aria-labelledby="predicas-titulo">
+  <div class="predicas__cabeza">
+    <p class="rotulo">Domingos grabados</p>
+    <h2 id="predicas-titulo">Oye un domingo antes de venir</h2>
+    <p class="predicas__entrada">
+      Son servicios completos, de unas dos horas, tal como se ven en su canal. No es un resumen:
+      es el domingo entero, con los cantos y todo.
+    </p>
+  </div>
+
+  {
+    hay ? (
+      <ul class="predicas__lista">
+        {PREDICAS.map((p) => (
+          <li>
+            <a class="predica" href={`https://youtu.be/${p.id}`}>
+              <span class="predica__dura">
+                {p.minutos} <small>min</small>
+              </span>
+              <span class="predica__titulo">{p.titulo}</span>
+              <span class="predica__fecha">{p.fecha}</span>
+              <span class="predica__resumen">{p.resumen}</span>
+              <span class="sr"> (se abre en YouTube)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="predicas__vacio">Todavía no hay prédicas publicadas.</p>
+    )
+  }
+
+  <p class="predicas__pista">
+    Se publican en el canal de la iglesia. <a href={IGLESIA.youtube}>Ver el canal<span class="sr">
+      (se abre en YouTube)</span></a>
+  </p>
+</section>
+
+<style>
+  /* Un tono mas hondo que la cal: despues de la quietud de Ninos la pagina
+     recupera ritmo con un cambio de superficie, no con un movimiento. */
+  .predicas {
+    background: var(--cal-sombra);
+    color: var(--tinta);
+    padding: 28px 20px 28px;
+    display: grid;
+    gap: 12px;
+  }
+  /* El rotulo va con el ocre hondo: sobre cal-sombra el ocre normal mide 6.16
+     y no llega al piso de 7. Medido, no supuesto. */
+  .predicas .rotulo {
+    color: var(--ocre-hondo);
+  }
+  .predicas__cabeza {
+    max-width: 34rem;
+    display: grid;
+    gap: 8px;
+  }
+  .predicas h2 {
+    font-size: clamp(2.1rem, 8.5vw, 4.4rem);
+    margin: 4px 0 2px;
+  }
+
+  .predicas__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  /* La tarjeta entera es el enlace. La barra de luz de la orilla izquierda es la
+     unica microinteraccion de la seccion: pasa de 6 a 14 px y la tarjeta sube
+     2 px, en 180 ms. Nada de eso oculta ni revela texto: los cuatro datos estan
+     completos y quietos desde el primer pintado. */
+  /* A 390 la duracion y la fecha comparten renglon debajo del titulo. El
+     numero sigue yendo primero y sigue siendo lo primero que se lee, pero deja
+     de ocupar una columna de 30 px de alto: en siete tarjetas eso eran 315 px
+     de scroll, y el tope de la pagina son 14 pantallas. De 760 px para arriba,
+     donde el alto sobra, la duracion vuelve a su columna en grande. */
+  .predica {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "titulo"
+      "dura"
+      "resumen";
+    row-gap: 2px;
+    background: var(--cal);
+    border: 1px solid rgba(28, 34, 31, 0.14);
+    border-radius: 14px;
+    padding: 10px 14px 11px 22px;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition:
+      transform 180ms ease-out,
+      box-shadow 180ms ease-out;
+  }
+  .predica::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: var(--luz);
+    transition: width 180ms ease-out;
+  }
+  .predica:hover,
+  .predica:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 0 rgba(28, 34, 31, 0.16);
+  }
+  .predica:hover::before,
+  .predica:focus-visible::before,
+  .predica:active::before {
+    width: 14px;
+  }
+  .predica:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  .predica__dura {
+    grid-area: dura;
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.2;
+    color: var(--tinta);
+  }
+  /* "min" es leyenda y no baja de 16 px; el dato que porta es el numero, que va
+     delante. */
+  .predica__dura small {
+    font-family: var(--cuerpo);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .predica__titulo {
+    grid-area: titulo;
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: clamp(1.35rem, 5.5vw, 1.9rem);
+    line-height: 1.06;
+  }
+  .predica__fecha {
+    grid-area: dura;
+    justify-self: end;
+    align-self: baseline;
+    color: var(--tinta-suave);
+    font-size: 16px;
+  }
+  .predica__resumen {
+    grid-area: resumen;
+    margin-top: 4px;
+  }
+
+  .predicas__vacio,
+  .predicas__pista {
+    color: var(--tinta-suave);
+    max-width: 34rem;
+  }
+  .predicas__pista a {
+    color: var(--tinta);
+    font-weight: 700;
+    /* Enlace en linea con area tocable de 44 px: el subrayado no es el blanco. */
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
+    padding: 0 2px;
+  }
+
+  @media (min-width: 760px) {
+    .predica {
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "dura titulo"
+        "dura fecha"
+        "dura resumen";
+      column-gap: 24px;
+      padding: 20px 22px 20px 30px;
+      align-items: baseline;
+    }
+    .predica__dura {
+      align-self: start;
+      font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+    }
+    .predica__dura small {
+      display: block;
+    }
+    .predica__fecha {
+      grid-area: fecha;
+      justify-self: start;
+    }
+    .predica__resumen {
+      margin-top: 8px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .predicas {
+      padding: 80px 64px 88px;
+    }
+    .predicas__lista {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .predicas__cabeza,
+    .predicas__pista {
+      max-width: 40rem;
+    }
+  }
+</style>

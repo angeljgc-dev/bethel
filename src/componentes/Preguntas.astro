@@ -1,0 +1,100 @@
+---
+/* Las preguntas 04, 05 y 06, ya adentro.
+
+   Vienen despues de la linea de tiempo, que es la 03, y cierran el bloque que
+   abrio el umbral con la 02. Las tres son quietas: ni entran animadas, ni las
+   toca la luz, ni tienen microinteraccion. Lo unico que se mueve en esta parte
+   de la pagina es el sol del riel, que quedo en la seccion anterior.
+
+   La 06 es la mas delicada del sitio. Va enmarcada entre dos reglas de un pixel
+   y sin un solo adorno: es la respuesta que le quita el miedo a quien cree que
+   una iglesia es un sitio donde le van a pedir dinero, y cualquier gesto encima
+   la volveria un anuncio. Su texto no se toca ni una palabra.
+
+   El contador de cada pregunta va escrito, no calculado con el orden del DOM:
+   si un dia se quita o se agrega una, el numero tiene que cambiarlo una
+   persona que se haya leido el hilo entero. */
+
+import Boton from "./Boton.astro";
+import { IGLESIA, PRIMERA_VEZ } from "../datos/iglesia";
+import { enlaceWhatsApp, mensajeVisita } from "../lib/candado";
+
+const visita = enlaceWhatsApp(IGLESIA.whatsapp, mensajeVisita(IGLESIA.marca));
+---
+
+<section class="preguntas" aria-label="Más preguntas de la primera visita">
+  <div class="preguntas__caja">
+    <div class="pregunta">
+      <p class="rotulo">Pregunta 4 de 7</p>
+      <h3>¿Qué me pongo?</h3>
+      <p>{PRIMERA_VEZ.vestimenta}</p>
+    </div>
+
+    <div class="pregunta">
+      <p class="rotulo">Pregunta 5 de 7</p>
+      <h3>¿Me van a señalar o pedir que me presente?</h3>
+      <p>{PRIMERA_VEZ.senalar}</p>
+      <p>{PRIMERA_VEZ.acompanar}</p>
+    </div>
+
+    <div class="pregunta pregunta--dinero">
+      <p class="rotulo">Pregunta 6 de 7</p>
+      <h3>¿Me van a pedir dinero?</h3>
+      <p>{PRIMERA_VEZ.ofrenda}</p>
+    </div>
+
+    <div class="preguntas__accion">
+      <Boton href={visita} variante="whatsapp" aviso="se abre en WhatsApp">
+        Avísanos que vienes y te esperamos en la puerta
+      </Boton>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Mismo techo que la linea de tiempo: el bloque de adentro es uno solo y no
+     se corta por la mitad con un cambio de fondo. */
+  .preguntas {
+    background: var(--techo);
+    color: var(--cal-porton);
+    padding: 8px 20px 28px;
+  }
+  .preguntas__caja {
+    max-width: 34rem;
+    display: grid;
+    gap: 22px;
+  }
+  .pregunta {
+    display: grid;
+    gap: 8px;
+  }
+  .pregunta .rotulo {
+    color: var(--luz);
+  }
+  .pregunta h3 {
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+    max-width: 18ch;
+  }
+
+  /* La 06, enmarcada y sin nada encima. Las dos reglas son de un pixel y del
+     mismo color del texto secundario: no hay color de aviso, no hay icono y no
+     hay fondo distinto. Se destaca por el aire, no por el adorno. */
+  .pregunta--dinero {
+    border-top: 1px solid rgba(213, 220, 215, 0.4);
+    border-bottom: 1px solid rgba(213, 220, 215, 0.4);
+    padding: 22px 0;
+  }
+
+  .preguntas__accion {
+    margin-top: 4px;
+  }
+
+  @media (min-width: 900px) {
+    .preguntas {
+      padding: 8px 64px 88px;
+    }
+    .preguntas__caja {
+      gap: 52px;
+    }
+  }
+</style>

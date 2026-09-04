@@ -19,35 +19,61 @@
    3. Cuánto dura no es un letrero de paso dentro del panel verde: es la
       pregunta 02, con su encabezado, su dato grande y su cuerpo, en su posición
       de reposo. En el panel solo va la frase del cruce, que es decorado y por
-      eso va aria-hidden. */
+      eso va aria-hidden.
+
+   La segunda instancia (`variante="luz"`) es la misma máquina al revés. Aquí el
+   panel que se recorta es el de abajo del documento, no el de arriba: crece
+   desde el centro con `circle(0%)` a `circle(120%)` y va tapando la cal. Por eso
+   los papeles se cambian: el panel que se recorta es el que lleva el contenido
+   (queda entero y quieto al final del recorrido, que es su posición de reposo,
+   exactamente como Adentro en la primera instancia) y el que se queda debajo es
+   el decorado. Lo que va dentro lo pone quien la usa, por el slot. */
 
 import { CULTOS, PRIMERA_VEZ } from "../datos/iglesia";
 import { finDe, duracionEnHoras } from "../lib/candado";
+
+interface Props {
+  variante?: "porton" | "luz";
+}
+const { variante = "porton" } = Astro.props;
 
 const domingo = CULTOS.find((c) => c.principal)!;
 const fin = finDe(domingo);
 const dura = duracionEnHoras(domingo.minutos);
 ---
 
-<div class="umbral">
-  <div class="umbral__porton" aria-hidden="true">
-    <p class="cruce">Cruzas el portón.</p>
-  </div>
+{
+  variante === "porton" ? (
+    <div class="umbral umbral--porton">
+      <div class="umbral__porton" aria-hidden="true">
+        <p class="cruce">Cruzas el portón.</p>
+      </div>
 
-  <section class="umbral__adentro" id="adentro" aria-labelledby="adentro-titulo">
-    <p class="rotulo">Ya adentro · 2 a 6 de 7</p>
-    <h2 id="adentro-titulo">Esto es lo que va a pasar</h2>
-    <p class="entrada">Un domingo normal, con tiempos. Para que no haya sorpresas.</p>
+      <section class="umbral__adentro" id="adentro" aria-labelledby="adentro-titulo">
+        <p class="rotulo">Ya adentro · 2 a 6 de 7</p>
+        <h2 id="adentro-titulo">Esto es lo que va a pasar</h2>
+        <p class="entrada">Un domingo normal, con tiempos. Para que no haya sorpresas.</p>
 
-    <div class="pregunta">
-      <h3>¿Cuánto dura?</h3>
-      <p class="dato-grande">{dura}</p>
-      <p>
-        Empieza a las {domingo.hora} y termina a las {fin}. {PRIMERA_VEZ.salir}
-      </p>
+        <div class="pregunta">
+          <h3>¿Cuánto dura?</h3>
+          <p class="dato-grande">{dura}</p>
+          <p>
+            Empieza a las {domingo.hora} y termina a las {fin}. {PRIMERA_VEZ.salir}
+          </p>
+        </div>
+      </section>
     </div>
-  </section>
-</div>
+  ) : (
+    <div class="umbral umbral--luz">
+      <div class="umbral__previo" aria-hidden="true">
+        <p class="cruce">Se apaga la luz.</p>
+      </div>
+      <div class="umbral__luz">
+        <slot />
+      </div>
+    </div>
+  )
+}
 
 <style>
   .umbral {
@@ -63,23 +89,31 @@ const dura = duracionEnHoras(domingo.minutos);
   }
 
   .umbral__porton,
-  .umbral__adentro {
+  .umbral__adentro,
+  .umbral__previo,
+  .umbral__luz {
     position: relative;
     padding: 40px 20px;
   }
 
   :global(html[data-anima]) .umbral__porton,
-  :global(html[data-anima]) .umbral__adentro {
+  :global(html[data-anima]) .umbral__adentro,
+  :global(html[data-anima]) .umbral__previo,
+  :global(html[data-anima]) .umbral__luz {
     position: absolute;
     inset: 0;
     padding: 24px 20px;
     overflow: hidden;
   }
-  /* Adentro está debajo y el portón encima, que es el que se recorta. */
-  :global(html[data-anima]) .umbral__adentro {
+  /* Adentro está debajo y el portón encima, que es el que se recorta. En la
+     variante de la luz los papeles se cambian: el decorado abajo y el panel que
+     crece encima. */
+  :global(html[data-anima]) .umbral__adentro,
+  :global(html[data-anima]) .umbral__previo {
     z-index: 1;
   }
-  :global(html[data-anima]) .umbral__porton {
+  :global(html[data-anima]) .umbral__porton,
+  :global(html[data-anima]) .umbral__luz {
     z-index: 2;
   }
 
@@ -88,6 +122,25 @@ const dura = duracionEnHoras(domingo.minutos);
     color: var(--cal-porton);
     display: grid;
     align-content: center;
+  }
+  /* El panel que queda detrás de la segunda cerradura: la cola de Prédicas, con
+     una frase de decorado que no lleva ningún dato y va aria-hidden. */
+  .umbral__previo {
+    background: var(--cal-sombra);
+    color: var(--tinta);
+    display: grid;
+    align-content: center;
+  }
+  .umbral__luz {
+    background: var(--techo);
+    color: var(--cal-porton);
+    display: grid;
+    align-content: end;
+  }
+  /* Sin la coreografía el panel de la luz no se recorta y no tiene por qué medir
+     una pantalla: es una sección más, apilada y completa. */
+  :global(html[data-anima]) .umbral__luz {
+    padding: 0;
   }
   .cruce {
     font-family: var(--titular);
@@ -133,12 +186,18 @@ const dura = duracionEnHoras(domingo.minutos);
 
   @media (min-width: 900px) {
     .umbral__porton,
-    .umbral__adentro {
+    .umbral__adentro,
+    .umbral__previo,
+    .umbral__luz {
       padding: 64px;
     }
     :global(html[data-anima]) .umbral__porton,
-    :global(html[data-anima]) .umbral__adentro {
+    :global(html[data-anima]) .umbral__adentro,
+    :global(html[data-anima]) .umbral__previo {
       padding: 48px 64px;
+    }
+    :global(html[data-anima]) .umbral__luz {
+      padding: 0;
     }
   }
 </style>

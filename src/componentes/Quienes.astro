@@ -1,0 +1,194 @@
+---
+/* Quiénes somos, y el momento.
+
+   La sección abre dentro de la segunda cerradura: el panel oscuro crece desde el
+   centro sobre la cal de Prédicas y, cuando termina de crecer, es una pantalla
+   completa con el polvo en la luz arriba y, abajo, sobre una banda sólida, la
+   línea que dice qué es esta iglesia. Esa banda es la posición de reposo del
+   texto: al final del recorrido está entero, quieto y legible, igual que Adentro
+   en la primera cerradura.
+
+   Lo que se publica hoy es lo que es verdad y está publicado por ellos: la línea
+   de la denominación y su misión. La historia está vacía a propósito. Era la de
+   más peso emocional del sitio y la de muestra estaba inventada; una historia
+   inventada en la sección que existe para dar confianza es el peor sitio posible
+   para inventar. Cuando llegue, entra aquí y empuja la misión hacia abajo sin
+   tocar una línea de este archivo.
+
+   La rejilla de personas no se pinta sin nombres autorizados: un encabezado con
+   nada debajo es peor que ningún encabezado. */
+
+import Umbral from "./Umbral.astro";
+import Retrato from "./Retrato.astro";
+import { IGLESIA, LIDERAZGO } from "../datos/iglesia";
+
+const hayGente = LIDERAZGO.length > 0;
+const hayCola = Boolean(IGLESIA.historia) || hayGente;
+---
+
+<Umbral variante="luz">
+  <section class="quienes" id="quienes" aria-labelledby="quienes-titulo">
+    {/* El hueco del momento. El canvas lo crea el módulo del polvo, y si no
+        llega (movimiento reducido, ahorro de datos, aparato modesto, sin WebGL)
+        lo que queda es este fondo de CSS, quieto: la misma luz entrando por la
+        misma celosía. Nadie nota que faltó algo, y no hay texto de carga. */}
+    <div class="momento" data-momento aria-hidden="true"></div>
+
+    <div class="quienes__banda">
+      <p class="rotulo">Quiénes somos</p>
+      <h2 id="quienes-titulo">{IGLESIA.denominacionExplicada}</h2>
+    </div>
+  </section>
+</Umbral>
+
+{
+  hayCola && (
+    <section class="quienes__cola" aria-label="La historia y la gente">
+      {IGLESIA.historia && <p class="quienes__historia">{IGLESIA.historia}</p>}
+
+      {hayGente && (
+        <div class="quienes__gente">
+          <h2>La gente que vas a ver</h2>
+          <ul class="quienes__rejilla">
+            {LIDERAZGO.map((p) => (
+              <Retrato nombre={p.nombre} funcion={p.funcion} contexto={p.contexto} />
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+}
+
+<section class="quienes__mision" aria-label="Su misión">
+  <blockquote>
+    <p>{IGLESIA.mision}</p>
+    <cite>{IGLESIA.nombreCompleto}</cite>
+  </blockquote>
+</section>
+
+<style>
+  .quienes {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    background: var(--techo);
+    color: var(--cal-porton);
+  }
+
+  /* Arriba, el momento. Es un rectángulo aparte y NO pasa por debajo del texto:
+     la banda de abajo tiene fondo sólido y empieza donde el canvas termina. */
+  .momento {
+    position: relative;
+    overflow: hidden;
+    min-height: 46svh;
+    background:
+      radial-gradient(120% 90% at 62% 8%, rgba(242, 193, 94, 0.34), transparent 62%),
+      var(--techo);
+  }
+  /* La celosía del respaldo, que es lo que se ve cuando el momento no carga. */
+  .momento::before {
+    content: "";
+    position: absolute;
+    inset: -14% -10% auto -10%;
+    height: 78%;
+    background-image: var(--celosia);
+    background-size: var(--modulo) var(--modulo);
+    opacity: 0.2;
+    transform: skewX(-12deg);
+    -webkit-mask-image: linear-gradient(196deg, #000, transparent 78%);
+    mask-image: linear-gradient(196deg, #000, transparent 78%);
+  }
+  /* Cuando el módulo del polvo entra, pinta su canvas encima del respaldo. */
+  .momento :global(canvas) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .quienes__banda {
+    position: relative;
+    z-index: 1;
+    background: var(--techo);
+    padding: 22px 20px 26px;
+    display: grid;
+    gap: 8px;
+  }
+  .quienes__banda .rotulo {
+    color: var(--luz-clara);
+  }
+  .quienes__banda h2 {
+    font-size: clamp(1.25rem, 4.4vw, 2rem);
+    line-height: 1.16;
+    letter-spacing: -0.005em;
+    max-width: 36rem;
+  }
+
+  .quienes__cola,
+  .quienes__mision {
+    background: var(--techo);
+    color: var(--cal-porton);
+    padding: 8px 20px 28px;
+    display: grid;
+    gap: 26px;
+  }
+  .quienes__historia {
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 5.4vw, 2.1rem);
+    line-height: 1.14;
+    max-width: 30rem;
+  }
+  .quienes__gente {
+    display: grid;
+    gap: 18px;
+  }
+  .quienes__gente h2 {
+    font-size: clamp(1.7rem, 6.5vw, 2.6rem);
+  }
+  .quienes__rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 16px;
+  }
+
+  .quienes__mision blockquote {
+    margin: 0;
+    max-width: 34rem;
+    border-left: 2px solid var(--luz);
+    padding-left: 16px;
+    display: grid;
+    gap: 8px;
+  }
+  .quienes__mision p {
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: clamp(1.3rem, 5vw, 1.9rem);
+    line-height: 1.14;
+  }
+  .quienes__mision cite {
+    font-style: normal;
+    color: var(--techo-suave);
+    font-size: 16px;
+  }
+
+  @media (min-width: 900px) {
+    .quienes__banda {
+      padding: 28px 64px 34px;
+    }
+    .quienes__cola,
+    .quienes__mision {
+      padding: 16px 64px 88px;
+    }
+    .quienes__rejilla {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 26px 22px;
+    }
+  }
+</style>

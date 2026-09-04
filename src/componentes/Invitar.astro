@@ -1,0 +1,197 @@
+---
+/* Invita a alguien. La unica seccion que no le habla a quien nunca ha venido.
+
+   Casi nadie llega a una iglesia por internet: llega porque alguien lo invito y
+   se ofrecio a acompanarlo. Esta seccion existe para que ese alguien no tenga
+   que escribir el mensaje.
+
+   Tres cosas que estan en codigo y no en una promesa:
+
+   1. **El enlace esta armado en el HTML.** El wa.me completo, con las cuatro
+      lineas y la direccion, sale del build. Sin JavaScript funciona igual; lo
+      unico que JavaScript agrega es el nombre, si la persona lo escribe.
+   2. **Lo que se ve es exactamente lo que se manda.** La tarjeta imprime las
+      mismas lineas que van en el enlace, de la misma funcion. No hay dos
+      textos que mantener.
+   3. **El resalte pasa por detras, nunca por encima de los glifos.** Y en
+      reposo ya esta puesto, asi que sin movimiento la tarjeta se ve terminada.
+      Si no hay tema de la semana, la linea del tema no existe y su resalte se
+      va con ella: nunca un resaltador sobre un renglon vacio. */
+
+import Boton from "./Boton.astro";
+import Cortina from "./Cortina.astro";
+import { IGLESIA, CULTOS, PROXIMO_TEMA } from "../datos/iglesia";
+import { finDe, invitacion, lineasDeInvitacion } from "../lib/candado";
+
+const domingo = CULTOS.find((c) => c.principal)!;
+const datos = {
+  marca: IGLESIA.marca,
+  ciudad: IGLESIA.ciudad,
+  colonia: IGLESIA.colonia,
+  calle: IGLESIA.calle,
+  hora: domingo.hora,
+  fin: finDe(domingo)!,
+  tema: PROXIMO_TEMA || undefined,
+  sitio: IGLESIA.sitio,
+};
+
+const enlace = invitacion(datos);
+/* Las lineas vacias son separaciones del mensaje de WhatsApp, no renglones que
+   pintar: aqui se quitan y la separacion la pone el espacio entre parrafos. */
+const lineas = lineasDeInvitacion(datos).filter((l) => l.trim());
+/* Las dos primeras llevan los datos (la hora y la calle) y son las que lleva el
+   resalte; el resto es la oferta de acompanar y el enlace. */
+const conResalte = 2;
+---
+
+<section class="invitar" id="invitar" aria-labelledby="invitar-titulo">
+  <Cortina />
+  <div class="invitar__franja" aria-hidden="true"></div>
+
+  <div class="invitar__caja">
+    <p class="rotulo">Para quien ya viene</p>
+    <h2 id="invitar-titulo">Invita a alguien</h2>
+    <p>
+      Casi nadie llega a una iglesia por internet. Llega porque alguien lo invitó y se ofreció a
+      acompañarlo. Este botón arma el mensaje: le pones el nombre y lo mandas.
+    </p>
+
+    <div class="globo">
+      {
+        lineas.map((linea, i) => (
+          <p class="globo__linea">
+            {i < conResalte && <span class="globo__resalte" aria-hidden="true" />}
+            <span>{linea}</span>
+          </p>
+        ))
+      }
+    </div>
+
+    <div class="invitar__nombre">
+      <label for="invitar-quien">Su nombre <small>(opcional)</small></label>
+      <input id="invitar-quien" type="text" autocomplete="off" data-invitar-nombre />
+    </div>
+
+    <div>
+      <Boton href={enlace} variante="whatsapp" aviso="se abre en WhatsApp" clase="invitar__boton">
+        Mandar esta invitación
+      </Boton>
+    </div>
+
+    <p class="invitar__pista">
+      Se abre en tu WhatsApp con el mensaje escrito. Puedes cambiar lo que quieras antes de
+      mandarlo.
+    </p>
+  </div>
+</section>
+
+<script>
+  /* Diez lineas: el enlace ya viene armado del build y aqui solo se le cambia el
+     saludo cuando la persona escribe un nombre. Si este script no corre, el
+     boton manda el mismo mensaje sin el nombre. */
+  const campo = document.querySelector<HTMLInputElement>("[data-invitar-nombre]");
+  const boton = document.querySelector<HTMLAnchorElement>(".invitar__boton");
+  if (campo && boton) {
+    const base = new URL(boton.href);
+    const texto = base.searchParams.get("text") || "";
+    campo.addEventListener("input", () => {
+      const nombre = campo.value.trim().slice(0, 40);
+      const url = new URL(base.href);
+      url.searchParams.set("text", nombre ? texto.replace(/^Hola\./, `Hola, ${nombre}.`) : texto);
+      boton.href = url.href;
+    });
+  }
+</script>
+
+<style>
+  .invitar {
+    position: relative;
+    background: var(--cal);
+    color: var(--tinta);
+    padding: 72px 20px 28px;
+    overflow: hidden;
+  }
+  /* La franja del techo que la cortina tapa. Va vacia: debajo de la cortina no
+     hay ni una letra. Sin JavaScript se ve, y es el corte limpio. */
+  .invitar__franja {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 72px;
+    background: var(--techo);
+  }
+
+  .invitar__caja {
+    position: relative;
+    z-index: 2;
+    max-width: 34rem;
+    display: grid;
+    gap: 10px;
+  }
+  .invitar h2 {
+    font-size: clamp(2.1rem, 8.5vw, 4.4rem);
+    margin: 4px 0 2px;
+  }
+
+  /* El globo: el mensaje tal como llega, legible de un golpe. */
+  .globo {
+    background: var(--cal-sombra);
+    border-radius: 18px 18px 18px 4px;
+    padding: 14px 18px;
+    display: grid;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .globo__linea {
+    position: relative;
+  }
+  .globo__linea span:last-child {
+    position: relative;
+    z-index: 1;
+  }
+  /* El resalte va por detras y no toca ningun glifo. Compuesto sobre
+     cal-sombra da 11.06 con la tinta encima, muy por encima del piso de 7. */
+  .globo__resalte {
+    position: absolute;
+    inset: -2px -6px;
+    background: rgba(242, 193, 94, 0.35);
+    border-radius: 4px;
+    transform-origin: left center;
+    z-index: 0;
+  }
+
+  .invitar__nombre {
+    display: grid;
+    gap: 6px;
+    margin-top: 4px;
+    max-width: 22rem;
+  }
+  .invitar__nombre label {
+    font-weight: 700;
+  }
+  .invitar__nombre small {
+    font-weight: 400;
+    color: var(--tinta-suave);
+    font-size: 16px;
+  }
+  .invitar__nombre input {
+    font: inherit;
+    min-height: 48px;
+    padding: 8px 14px;
+    border: 2px solid var(--tinta);
+    border-radius: 12px;
+    background: var(--cal);
+    color: var(--tinta);
+  }
+  .invitar__pista {
+    color: var(--tinta-suave);
+  }
+
+  @media (min-width: 900px) {
+    .invitar {
+      padding: 160px 64px 88px;
+    }
+    .invitar__franja {
+      height: 160px;
+    }
+  }
+</style>

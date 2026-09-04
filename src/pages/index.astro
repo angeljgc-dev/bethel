@@ -7,11 +7,23 @@ import Portada from "../componentes/Portada.astro";
 import Llegar from "../componentes/Llegar.astro";
 import Umbral from "../componentes/Umbral.astro";
 import LineaDeTiempo from "../componentes/LineaDeTiempo.astro";
-import { IGLESIA } from "../datos/iglesia";
+import Preguntas from "../componentes/Preguntas.astro";
+import Ninos from "../componentes/Ninos.astro";
+import Predicas from "../componentes/Predicas.astro";
+import Quienes from "../componentes/Quienes.astro";
+import Invitar from "../componentes/Invitar.astro";
+import Cierre from "../componentes/Cierre.astro";
+import { IGLESIA, CULTOS } from "../datos/iglesia";
+import { finDe } from "../lib/candado";
 
+/* La descripcion tambien sale de los datos. Estaba escrita a mano con la hora y
+   la calle dentro, asi que cambiar el horario en iglesia.ts dejaba mintiendo
+   justo el texto que Google ensena. */
+const domingo = CULTOS.find((c) => c.principal)!;
 const titulo = `${IGLESIA.nombreCompleto} en ${IGLESIA.ciudad}, ${IGLESIA.estado}`;
 const descripcion =
-  `Domingos de 10:00 a 13:00 en el callejón Ceiba, ${IGLESIA.colonia}, ${IGLESIA.ciudad}. ` +
+  `${domingo.dia}s de ${domingo.hora} a ${finDe(domingo)} en el ` +
+  `${IGLESIA.calle.replace(/^Callejón/, "callejón")}, ${IGLESIA.colonia}, ${IGLESIA.ciudad}. ` +
   `Cuánto dura, por dónde se entra y qué pasa en tu primera visita.`;
 ---
 
@@ -20,4 +32,10 @@ const descripcion =
   <Llegar />
   <Umbral />
   <LineaDeTiempo />
+  <Preguntas />
+  <Ninos />
+  <Predicas />
+  <Quienes />
+  <Invitar />
+  <Cierre slot="pie" />
 </Base>

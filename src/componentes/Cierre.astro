@@ -1,0 +1,218 @@
+---
+/* El ultimo cuadro.
+
+   La pagina termina donde empezo: en la puerta, con la hora y la calle. Arriba,
+   la placa tipografica como pieza terminada; debajo, en cuerpo y quietos, los
+   cuatro bloques que alguien busca cuando ya decidio: con quien hablar, la
+   semana entera, donde es, y donde mas encontrarlos.
+
+   Lo que NO se publica aqui: "Contesta Hermana Lupita". Es tratamiento de
+   adentro, para quien nunca ha venido suena a monja o a familia, y ademas el
+   nombre era de muestra. Mientras ATENCION este vacio, el cierre da los tres
+   contactos y no promete a que hora contesta nadie.
+
+   Ninguna de las tres reuniones de la semana lleva rotulo inventado: del martes
+   y del jueves se publica el dia y la hora, que es lo unico que se sabe. */
+
+import Boton from "./Boton.astro";
+import { IGLESIA, CULTOS, ATENCION } from "../datos/iglesia";
+import { enlaceWhatsApp, mensajeGeneral, finDe } from "../lib/candado";
+
+const domingo = CULTOS.find((c) => c.principal)!;
+const fin = finDe(domingo);
+const whatsapp = enlaceWhatsApp(IGLESIA.whatsapp, mensajeGeneral(IGLESIA.marca));
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const redes = [
+  { nombre: "Facebook", url: IGLESIA.facebook },
+  { nombre: "YouTube", url: IGLESIA.youtube },
+  { nombre: "TikTok", url: IGLESIA.tiktok },
+].filter((r) => r.url);
+
+const anio = new Date().getFullYear();
+---
+
+<footer class="cierre" id="cierre" aria-labelledby="cierre-titulo">
+  <div class="cierre__placa">
+    <p class="rotulo">Hasta el domingo</p>
+    <h2 id="cierre-titulo">
+      {domingo.dia}s, de {domingo.hora} a {fin}.<br />{IGLESIA.calle}, {IGLESIA.colonia}.
+    </h2>
+    <div class="cierre__acciones">
+      <Boton href={whatsapp} variante="whatsapp" aviso="se abre en WhatsApp">WhatsApp</Boton>
+      <Boton
+        href={`${base}/domingo.ics`}
+        variante="claro"
+        descarga
+        aviso="descarga un archivo de calendario"
+      >
+        Guardar en mi calendario
+      </Boton>
+    </div>
+  </div>
+
+  <div class="cierre__rejilla">
+    <section class="cierre__bloque cierre__bloque--ancho" aria-labelledby="cierre-escribenos">
+      <h3 id="cierre-escribenos">Escríbenos</h3>
+      <ul class="cierre__enLinea">
+        <li><a href={whatsapp}>WhatsApp<span class="sr"> (se abre en WhatsApp)</span></a></li>
+        <li><a href={`tel:+52${IGLESIA.telefonoVisible.replace(/\s/g, "")}`}>{IGLESIA.telefonoVisible}</a></li>
+        <li><a href={`mailto:${IGLESIA.correo}`}>{IGLESIA.correo}</a></li>
+      </ul>
+      {ATENCION.horario && <p class="cierre__pista">{ATENCION.horario}</p>}
+    </section>
+
+    <section class="cierre__bloque cierre__bloque--ancho" aria-labelledby="cierre-redes">
+      <h3 id="cierre-redes">Dónde más</h3>
+      <ul class="cierre__enLinea">
+        {redes.map((r) => <li><a href={r.url}>{r.nombre}</a></li>)}
+      </ul>
+    </section>
+
+    <section class="cierre__bloque" aria-labelledby="cierre-semana">
+      <h3 id="cierre-semana">La semana</h3>
+      <ul>
+        {
+          CULTOS.map((c) => {
+            const cierra = finDe(c);
+            return (
+              <li>
+                {c.dia}
+                {c.principal && cierra ? `, de ${c.hora} a ${cierra}` : ` ${c.hora}`}
+                {c.nombre && ` · ${c.nombre}`}
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+
+    <section class="cierre__bloque" aria-labelledby="cierre-donde">
+      <h3 id="cierre-donde">Dónde</h3>
+      <ul>
+        <li>{IGLESIA.nombreCompleto}</li>
+        <li>{IGLESIA.calle}, {IGLESIA.colonia}</li>
+        <li>{IGLESIA.ciudad}, {IGLESIA.estado}, CP {IGLESIA.cp}</li>
+      </ul>
+    </section>
+
+    <section class="cierre__bloque cierre__bloque--ancho" aria-labelledby="cierre-datos">
+      <h3 id="cierre-datos">Tus datos</h3>
+      <p>
+        Esta página no tiene formularios y no guarda ningún dato tuyo. Si escribes por WhatsApp,
+        esa conversación queda en la aplicación, que es de Meta. Usamos tu nombre solo para
+        esperarte en la puerta.
+      </p>
+      <p><a href={`${base}/privacidad/`}>Aviso de privacidad</a></p>
+    </section>
+  </div>
+
+  <p class="cierre__firma">
+    {IGLESIA.nombreCompleto} · {IGLESIA.ciudad}, {IGLESIA.estado} · {anio}
+  </p>
+</footer>
+
+<style>
+  .cierre {
+    background: var(--porton);
+    color: var(--cal-porton);
+    padding: 28px 20px 20px;
+    display: grid;
+    gap: 16px;
+  }
+  .cierre .rotulo {
+    color: var(--luz-clara);
+  }
+
+  .cierre__placa {
+    display: grid;
+    gap: 10px;
+    max-width: 30rem;
+  }
+  .cierre h2 {
+    font-size: clamp(1.65rem, 6.6vw, 3.2rem);
+    line-height: 1.04;
+    margin-top: 2px;
+  }
+  .cierre__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  /* minmax(0, 1fr) y no 1fr: por defecto una columna de rejilla no baja de su
+     contenido minimo, y el correo (23 caracteres sin espacios) estiraba su
+     columna hasta desbordar la pagina un pixel a 320 px. Medido: la pagina se
+     movia 1 px en horizontal a 320 y 0 a 360. */
+  .cierre__rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px 16px;
+  }
+  .cierre__bloque--ancho {
+    grid-column: 1 / -1;
+  }
+  .cierre__bloque h3 {
+    font-size: 1.15rem;
+    color: var(--luz-clara);
+    margin-bottom: 4px;
+  }
+  .cierre__bloque ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cierre__bloque li {
+    line-height: 1.35;
+    /* El correo es la palabra mas larga del sitio: parte antes que desbordar. */
+    overflow-wrap: anywhere;
+  }
+  /* Los contactos y las redes van en linea y a todo el ancho. En dos columnas de
+     media pantalla, el correo (23 caracteres sin espacios) no cabe en su columna
+     y se partia a media palabra: "betherlcasade@gmai / l.com". Y en columna,
+     tres blancos de 44 px son 132 px de alto para tres palabras. */
+  .cierre__enLinea {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+  }
+  /* Los enlaces en linea del cierre tambien son de 44 px: son los tres unicos
+     contactos del sitio y no pueden ser un blanco de 24 px. */
+  .cierre__bloque a,
+  .cierre__firma a {
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
+    font-weight: 700;
+  }
+  .cierre__bloque p {
+    max-width: 36rem;
+  }
+  .cierre__pista {
+    color: var(--luz-clara);
+    margin-top: 6px;
+  }
+
+  .cierre__firma {
+    border-top: 1px solid rgba(243, 237, 227, 0.28);
+    padding-top: 8px;
+    font-size: 16px;
+  }
+
+  @media (min-width: 760px) {
+    .cierre__rejilla {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .cierre__bloque--ancho {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .cierre {
+      padding: 80px 64px 48px;
+      gap: 40px;
+    }
+  }
+</style>

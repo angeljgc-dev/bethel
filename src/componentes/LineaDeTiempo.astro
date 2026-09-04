@@ -173,9 +173,13 @@ const termina = finDe(domingo);
     padding-right: 20px;
     will-change: transform;
   }
+  /* El ancho de la tarjeta ES el recorrido del pin: seis tarjetas de 78vw piden
+     1,555 px de scroll a 390 y seis de 74vw piden 1,444. Con la pagina completa
+     medida en 14.80 pantallas contra un tope de 14, esos 191 px cuentan. A 74vw
+     el texto del tramo mas largo sigue cabiendo en la tarjeta sin recortarse. */
   :global(html[data-anima]) .tramo {
     flex: 0 0 auto;
-    width: min(78vw, 26rem);
+    width: min(74vw, 26rem);
   }
 
   @media (min-width: 900px) {

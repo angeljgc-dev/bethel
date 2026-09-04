@@ -1,0 +1,121 @@
+---
+/* El aviso de privacidad.
+
+   Obligatorio desde el 21 de marzo de 2025 aunque el sitio no pida un solo
+   dato. Va en pagina propia, con el mismo `head` y la misma base que el resto,
+   y enlazada desde el bloque "Tus datos" del cierre, que conserva su resumen de
+   tres frases.
+
+   Escrito en lenguaje de afuera: sin "titular de los datos", sin "tratamiento",
+   sin "derechos ARCO". Quien busque el termino legal lo reconoce igual; quien no,
+   entiende lo que pasa con lo suyo.
+
+   El parrafo de GitHub Pages es el unico que agrega algo que el sitio antes no
+   decia, y es verdad: decir "no recogemos nada" a secas, cuando el servidor si
+   registra la conexion, es la clase de media verdad que aqui no se publica.
+
+   El responsable es [DATO] y es un pendiente legal, no de diseno: sin nombre, el
+   aviso no cumple. Mientras falte, la pagina lo dice en voz alta en vez de
+   inventarlo. */
+
+import Base from "../layouts/Base.astro";
+import { IGLESIA, PRIVACIDAD } from "../datos/iglesia";
+
+const titulo = `Aviso de privacidad · ${IGLESIA.nombreCompleto}`;
+const descripcion =
+  "Esta página no te pide datos y no guarda ninguno. Qué pasa cuando escribes por WhatsApp y " +
+  "cómo pedir que borremos una conversación.";
+
+const direccion = `${IGLESIA.calle}, ${IGLESIA.colonia}, ${IGLESIA.ciudad}, ${IGLESIA.estado}, CP ${IGLESIA.cp}`;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<Base titulo={titulo} descripcion={descripcion}>
+  <article class="aviso">
+    <p class="rotulo">{IGLESIA.nombreCompleto}</p>
+    <h1>Aviso de privacidad</h1>
+
+    <p>
+      Esta página no te pide datos y no guarda ninguno. No hay formularios, no hay registro, no
+      hay boletín, no hay cookies nuestras y no usamos herramientas de medición ni de publicidad.
+      No sabemos quién nos visita.
+    </p>
+    <p>
+      La página está alojada en GitHub Pages. Como cualquier servidor de internet, ese servicio
+      puede registrar por su cuenta datos técnicos de la conexión, como la dirección IP, para
+      poder entregar la página. Nosotros no vemos esos registros ni los usamos para nada.
+    </p>
+    <p>
+      Los botones de WhatsApp abren la aplicación en tu teléfono con un mensaje ya escrito. Nada
+      se manda solo: tú decides si lo envías y puedes cambiarlo antes. Si nos escribes, esa
+      conversación queda en WhatsApp, que es de Meta, y se rige por las condiciones de esa
+      empresa, no por las nuestras. Nosotros vemos tu número y lo que nos escribas, como en
+      cualquier conversación.
+    </p>
+    <p>
+      Qué hacemos con lo que nos escribes: contestarte. Si nos das tu nombre porque vas a venir
+      por primera vez, lo usamos para esperarte en la puerta y nada más. No lo damos a nadie, no
+      lo publicamos y no lo metemos en ninguna lista.
+    </p>
+    <p>
+      Los enlaces a nuestro canal de YouTube, a Facebook y a TikTok te llevan fuera de esta
+      página. Ahí mandan las reglas de esas empresas.
+    </p>
+    <p>
+      Si quieres que borremos una conversación de WhatsApp, o saber qué tenemos tuyo, escríbenos
+      al <a href={`tel:+52${IGLESIA.telefonoVisible.replace(/\s/g, "")}`}>{IGLESIA.telefonoVisible}</a>
+      o a <a href={`mailto:${IGLESIA.correo}`}>{IGLESIA.correo}</a> y lo hacemos.
+    </p>
+
+    <p class="aviso__pie">
+      Responsable de esta página: {
+        PRIVACIDAD.responsable ? (
+          <>
+            {PRIVACIDAD.responsable}. {PRIVACIDAD.domicilio || direccion}.
+          </>
+        ) : (
+          <strong>pendiente de confirmar con la iglesia.</strong>
+        )
+      }
+      {!PRIVACIDAD.responsable && <> La dirección es {direccion}.</>}
+    </p>
+    <p class="aviso__pie">
+      Última actualización: {
+        PRIVACIDAD.actualizado ? PRIVACIDAD.actualizado : "este aviso todavía no se ha publicado."
+      }
+    </p>
+
+    <p><a class="aviso__volver" href={`${base}/`}>Ir al inicio</a></p>
+  </article>
+</Base>
+
+<style>
+  .aviso {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 40px 20px 64px;
+    display: grid;
+    gap: 16px;
+  }
+  .aviso h1 {
+    font-size: clamp(2.1rem, 8.5vw, 3.4rem);
+    margin: 4px 0 6px;
+  }
+  .aviso a {
+    font-weight: 700;
+  }
+  .aviso__pie {
+    color: var(--tinta-suave);
+  }
+  .aviso__volver {
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
+  }
+
+  @media (min-width: 900px) {
+    .aviso {
+      padding: 64px 20px 88px;
+    }
+  }
+</style>

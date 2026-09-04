@@ -27,6 +27,22 @@ export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
     document.documentElement.dataset.anima = "";
     const barra = altoDeLaBarra();
 
+    /* El orden en que se refrescan los disparadores que fijan algo TIENE que ser
+       el orden en que aparecen en la pagina, y no el orden en que se escriben
+       aqui. Cada pin alarga el documento con su espaciador, asi que un pin que
+       se mide antes que otro que esta por encima de el en la pagina se mide con
+       la pagina todavia corta y su arranque queda adelantado.
+
+       Medido: con la segunda cerradura creada antes que la linea de tiempo (que
+       va antes en la pagina), el segundo umbral se fijaba 1,500 px antes de
+       tiempo y el recorte terminaba con el panel todavia a 1,360 px de la barra.
+       Con la prioridad sacada del orden del DOM, arranca donde le toca.
+
+       La lista se saca del propio documento, no se escribe a mano: si manana
+       entra otra seccion fijada, entra sola en el orden correcto. */
+    const fijadas = [...document.querySelectorAll<HTMLElement>(".portada, .umbral, .minutos")];
+    const prioridad = (el: Element) => fijadas.length - fijadas.indexOf(el as HTMLElement);
+
     /* Portada a Llegar: la luz se va de la frase a la calle y la cortina verde
        sube. Tres cuentas que salieron de medir, no de gusto:
 
@@ -63,6 +79,7 @@ export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
           pin: true,
           scrub: true,
           anticipatePin: 1,
+          refreshPriority: prioridad(portada),
         },
       });
       salida
@@ -89,9 +106,9 @@ export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
       }
     }
 
-    /* El ojo de cerradura. Un solo disparador hace las tres cosas: fija el
-       umbral entero bajo la barra, deja que su espaciador ponga el recorrido, y
-       recorta el porton de 100 a 0 mientras dura.
+    /* El ojo de cerradura, las dos veces. Un solo disparador por instancia hace
+       las tres cosas: fija el umbral entero bajo la barra, deja que su
+       espaciador ponga el recorrido, y recorta un panel mientras dura.
 
        La primera version fijaba los dos paneles por separado con
        pinSpacing: false y escribia el alto de la pista a mano (200svh en el
@@ -102,26 +119,45 @@ export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
 
        Un solo clip-path animado, sin filtros y sin sombras dentro del recorte:
        es lo que la medicion con CPU 4x aguanto. */
-    const umbral = document.querySelector<HTMLElement>(".umbral");
-    if (umbral) {
+    const umbrales = [...document.querySelectorAll<HTMLElement>(".umbral")];
+    umbrales.forEach((umbral) => {
+      /* Las dos instancias son la misma maquina y el mismo disparador; lo unico
+         que cambia es cual de los dos paneles se recorta y hacia donde va el
+         circulo. La primera cierra el porton de 100 a 0 y deja ver la sala; la
+         segunda abre el panel oscuro de 0 a 120 sobre la cal de Predicas, con
+         el momento debajo del recorte. */
+      const cierra = umbral.querySelector<HTMLElement>(".umbral__porton");
+      const abre = umbral.querySelector<HTMLElement>(".umbral__luz");
+      const panel = cierra || abre;
+      if (!panel) return;
+      const desde = cierra ? "circle(100% at 50% 50%)" : "circle(0% at 50% 50%)";
+      const hasta = cierra ? "circle(0% at 50% 50%)" : "circle(120% at 50% 50%)";
+      /* Las dos cerraduras duran el 55% de una pantalla, que es lo mismo que
+         dura la salida de la portada. La primera duraba una pantalla entera,
+         que es el alto del panel, y al armar la pagina completa esa cuenta ya no
+         cabia: con las once secciones puestas la pagina medía 14.80 pantallas a
+         390 contra un tope de 14, y de esas 14.80 hay 3.78 de transicion pura.
+         Acortar el recorrido del circulo no le quita nada al cruce (el panel
+         sigue ocupando su pantalla completa antes y despues del pin: lo que se
+         acorta es lo que tarda el circulo en cerrarse, no lo que se ve) y
+         devuelve 0.40 pantallas por cerradura. */
+      const largo = 0.55;
+
       gsap
         .timeline({
           scrollTrigger: {
-            trigger: ".umbral",
+            trigger: umbral,
             start: `top top+=${barra}`,
-            end: () => "+=" + (window.innerHeight - barra),
+            end: () => "+=" + (window.innerHeight - barra) * largo,
             pin: true,
             scrub: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            refreshPriority: prioridad(umbral),
           },
         })
-        .fromTo(
-          ".umbral__porton",
-          { clipPath: "circle(100% at 50% 50%)" },
-          { clipPath: "circle(0% at 50% 50%)", ease: "none" },
-        );
-    }
+        .fromTo(panel, { clipPath: desde }, { clipPath: hasta, ease: "none" });
+    });
 
     /* La linea de tiempo. La lista de tarjetas se recorre de lado mientras la
        seccion esta fijada. El recorrido dura exactamente lo que mide la pista,
@@ -208,6 +244,7 @@ export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
+          refreshPriority: prioridad(minutos),
           snap: enganche,
           onRefresh: medirMapa,
           onUpdate: (self) => {
@@ -216,6 +253,53 @@ export function coreografia(gsap: Gsap, ScrollTrigger: Scroll): void {
             if (contador) contador.textContent = String(minuto);
           },
         },
+      });
+    }
+
+    /* Invita a alguien. Dos gestos que se disparan una vez, no con scrub:
+
+       - la cortina de cal sube desde abajo y tapa la franja de techo. Es un
+         cambio de lector (hasta aqui la pagina le habla a quien nunca ha
+         venido; de aqui en adelante, a quien ya viene) y un cambio de lector es
+         un evento, no un recorrido;
+       - el resalte recorre por detras las dos lineas que llevan datos, con 0.18
+         s de diferencia entre ellas. Se escala en X desde la izquierda: no toca
+         ni un glifo, y como es gsap.from, en reposo ya esta puesto. */
+    const cortina = document.querySelector<HTMLElement>(".cortina-cal");
+    if (cortina) {
+      gsap.from(cortina, {
+        yPercent: 100,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".invitar", start: "top 80%", once: true },
+      });
+    }
+    const resaltes = document.querySelectorAll<HTMLElement>(".globo__resalte");
+    if (resaltes.length) {
+      gsap.from(resaltes, {
+        scaleX: 0,
+        duration: 0.6,
+        stagger: 0.18,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".globo", start: "top 85%", once: true },
+      });
+    }
+
+    /* Ninos. El gesto mas pequeno de la pagina y el unico de esta seccion: el
+       degradado de luz de la parte alta entra una sola vez, en 0.6 s, cuando la
+       seccion aparece. No es scrub: si fuera scrub, la luz subiria y bajaria con
+       el dedo y la seccion dejaria de estar quieta, que es justo lo que se
+       decidio que fuera.
+
+       Es gsap.from, asi que el reposo lo pinta el CSS: sin JavaScript el
+       degradado ya esta puesto y nadie nota que faltó algo. */
+    const luzNinos = document.querySelector<HTMLElement>(".ninos__luz");
+    if (luzNinos) {
+      gsap.from(luzNinos, {
+        opacity: 0,
+        duration: 0.6,
+        ease: "power1.out",
+        scrollTrigger: { trigger: ".ninos", start: "top 85%", once: true },
       });
     }
   });

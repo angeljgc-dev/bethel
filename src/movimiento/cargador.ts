@@ -67,8 +67,47 @@ function cuandoLaFirmaTermine(): Promise<void> {
   });
 }
 
+/* El momento se pide MUCHO despues que la coreografia y con mas condiciones: es
+   un contexto WebGL y un bucle de cuadros, o sea la pieza mas cara del sitio, y
+   no lleva ni un dato encima.
+
+   Tres puertas, en este orden:
+
+   1. las mismas del movimiento (reducido, ahorro de datos, dos gigas o menos);
+   2. que exista WebGL. Preguntarlo por el constructor no crea contexto ninguno;
+   3. que el hueco exista en esta pagina.
+
+   Y tres esperas: `load`, que es lo que garantiza que el LCP ya paso; el primer
+   hueco de inactividad; y las fuentes, porque el shader se dimensiona con el
+   alto del hueco y ese alto cambia cuando la letra definitiva llega. */
+function cuandoNadaUrgente(): Promise<void> {
+  return new Promise((listo) => {
+    const idle = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number })
+      .requestIdleCallback;
+    const seguir = () => (idle ? idle(() => listo(), { timeout: 2500 }) : setTimeout(listo, 400));
+    if (document.readyState === "complete") seguir();
+    else window.addEventListener("load", seguir, { once: true });
+  });
+}
+
+function pedirElMomento(): void {
+  if (!hayMovimiento()) return;
+  if (typeof WebGLRenderingContext === "undefined") return;
+  const hueco = document.querySelector<HTMLElement>("[data-momento]");
+  if (!hueco) return;
+
+  Promise.all([cuandoNadaUrgente(), document.fonts.ready])
+    .then(() => import("./momento/polvo"))
+    .then((mod) => mod.arrancarPolvo(hueco))
+    .catch(() => {
+      /* El fondo de CSS de la seccion ya esta puesto: no falta nada. */
+    });
+}
+
 export function arrancarMovimiento(): void {
   if (!hayMovimiento()) return;
+
+  pedirElMomento();
 
   Promise.all([
     import("gsap"),

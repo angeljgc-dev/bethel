@@ -142,6 +142,12 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
       <slot />
     </main>
 
+    <!-- El cierre va FUERA de main. Dentro, un <footer> no es un punto de
+         referencia de la pagina y un lector de pantalla no lo ofrece en su lista
+         de regiones; fuera, es el contentinfo del documento y se salta a el de
+         un golpe. -->
+    <slot name="pie" />
+
     <script>
       /* El cargador decide si este aparato recibe movimiento antes de pedir una
          sola linea de GSAP. Nada mas cuelga de aqui. */
