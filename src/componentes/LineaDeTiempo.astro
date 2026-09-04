@@ -13,6 +13,7 @@
    se queda como está: nada se oculta ni se recorta. */
 
 import { CULTOS, PRIMERA_VEZ } from "../datos/iglesia";
+import { finDe } from "../lib/candado";
 
 const domingo = CULTOS.find((c) => c.principal)!;
 const total = domingo.minutos;
@@ -23,6 +24,17 @@ const tramos = PRIMERA_VEZ.tramos;
    marcas que se salgan no se dibujan: mejor un riel corto que un riel mentiroso. */
 const marcas = [...tramos.map((t) => t.desde).filter((m) => m < total), total];
 const porcentaje = (minuto: number) => ((minuto / total) * 100).toFixed(3);
+
+/* Las dos horas de los extremos del riel. Van escritas en hora de reloj y no en
+   minutos porque son las que alguien compara con su reloj, y salen de la hora
+   de entrada y de la duracion: cambiar "10:00" en iglesia.ts las mueve las dos.
+
+   Solo se rotulan los extremos. Las marcas de en medio son rayas sin numero: a
+   390 px, dos tramos que empiezan con diez minutos de diferencia (85 y 95) dejan
+   sus rotulos a 22 px uno de otro y se tocan. El dato completo de cada tramo
+   esta en su tarjeta, que es texto de lectura; el riel es dibujo. */
+const empieza = domingo.hora;
+const termina = finDe(domingo);
 ---
 
 <section
@@ -36,15 +48,10 @@ const porcentaje = (minuto: number) => ((minuto / total) * 100).toFixed(3);
     <h3 id="minutos-titulo">¿Qué va a pasar, minuto a minuto?</h3>
     <div class="riel" aria-hidden="true">
       <div class="riel__pista">
-        {
-          marcas.map((m) => (
-            <span class="riel__marca" style={`left:${porcentaje(m)}%`}>
-              <b>{m}</b>
-            </span>
-          ))
-        }
+        {marcas.map((m) => <span class="riel__marca" style={`left:${porcentaje(m)}%`}></span>)}
         <span class="riel__sol" style="left:0%"></span>
       </div>
+      <p class="riel__horas"><b>{empieza}</b><b>{termina}</b></p>
       <p class="riel__contador">minuto <span data-minuto>0</span> de {total}</p>
     </div>
   </div>
@@ -102,21 +109,16 @@ const porcentaje = (minuto: number) => ((minuto / total) * 100).toFixed(3);
     height: 8px;
     background: rgba(243, 237, 227, 0.45);
   }
-  .riel__marca b {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    transform: translateX(-50%);
+  .riel__horas {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -6px;
+  }
+  .riel__horas b {
     font-family: var(--cuerpo);
     font-weight: 400;
     font-size: 16px;
     color: var(--techo-suave);
-  }
-  .riel__marca:first-child b {
-    transform: none;
-  }
-  .riel__marca:last-child b {
-    transform: translateX(-100%);
   }
   .riel__sol {
     position: absolute;
@@ -129,7 +131,7 @@ const porcentaje = (minuto: number) => ((minuto / total) * 100).toFixed(3);
     box-shadow: 0 0 0 6px rgba(242, 193, 94, 0.25);
   }
   .riel__contador {
-    margin-top: 16px;
+    margin-top: 6px;
     color: var(--luz-clara);
     font-size: 16px;
     letter-spacing: 0.04em;

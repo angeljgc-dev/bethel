@@ -9,14 +9,17 @@
 
    1. El portón va ANTES que Adentro en el HTML. Sin JavaScript se cruza el
       portón y después se entra, nunca al revés.
-   2. Toda la geometría del cruce (el alto de la pista, los dos paneles
-      superpuestos, el recorte) cuelga de html[data-anima], que solo pone la
+   2. Toda la geometría del cruce (los dos paneles superpuestos y el alto de una
+      pantalla que los contiene) cuelga de html[data-anima], que solo pone la
       coreografía cuando GSAP ya está. Sin JavaScript, con GSAP caído o con
       movimiento reducido, esto es un panel corto y una sección normal, apilados
-      y completos.
-   3. El dato que la maqueta escondía aquí ("adentro dura tanto") ya no vive en
-      un panel decorativo a media posición de scroll: es la pregunta 02, con su
-      encabezado, su dato y su cuerpo, en su posición de reposo. */
+      y completos. El recorrido del cruce tampoco se escribe aquí: lo pone el
+      espaciador del pin, así que no hay ningún alto de pista que mantener a
+      mano.
+   3. Cuánto dura no es un letrero de paso dentro del panel verde: es la
+      pregunta 02, con su encabezado, su dato grande y su cuerpo, en su posición
+      de reposo. En el panel solo va la frase del cruce, que es decorado y por
+      eso va aria-hidden. */
 
 import { CULTOS, PRIMERA_VEZ } from "../datos/iglesia";
 import { finDe, duracionEnHoras } from "../lib/candado";
@@ -50,9 +53,13 @@ const dura = duracionEnHoras(domingo.minutos);
   .umbral {
     position: relative;
   }
-  /* La pista que dura el cruce. Solo existe con la coreografía puesta. */
+  /* Con la coreografía puesta el umbral mide una pantalla y los dos paneles
+     ocupan esa misma pantalla, uno encima del otro. El recorrido del cruce NO
+     se escribe aquí: lo añade el espaciador del pin, así que el alto de la
+     pista y la duración del recorte son el mismo número por construcción. */
   :global(html[data-anima]) .umbral {
-    height: 200svh;
+    height: calc(100svh - var(--barra));
+    overflow: hidden;
   }
 
   .umbral__porton,
@@ -63,14 +70,13 @@ const dura = duracionEnHoras(domingo.minutos);
 
   :global(html[data-anima]) .umbral__porton,
   :global(html[data-anima]) .umbral__adentro {
-    height: calc(100svh - var(--barra));
+    position: absolute;
+    inset: 0;
     padding: 24px 20px;
     overflow: hidden;
   }
-  /* Adentro sube a ocupar el mismo sitio que el portón, y el portón se queda
-     encima para recortarse. */
+  /* Adentro está debajo y el portón encima, que es el que se recorta. */
   :global(html[data-anima]) .umbral__adentro {
-    margin-top: calc(-100svh + var(--barra));
     z-index: 1;
   }
   :global(html[data-anima]) .umbral__porton {

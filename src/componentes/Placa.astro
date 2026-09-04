@@ -13,14 +13,19 @@
 import Hueco from "./Hueco.astro";
 import { IGLESIA, COMO_LLEGAR } from "../datos/iglesia";
 
-/* La palabra grande es el número si lo hay, y si no el nombre del callejón sin
+/* El hueco va sin pie. El pie de la figura describe la foto de la fachada, que
+   todavía no existe, y la línea de cómo se reconoce la entrada ya va dentro de
+   la placa: ponerla en los dos sitios la imprimía dos veces el día que la
+   iglesia conteste. Cuando llegue la foto, entra con su alt y con su pie.
+
+   La palabra grande es el número si lo hay, y si no el nombre del callejón sin
    la palabra callejón. */
 const nombreCorto = IGLESIA.calle.replace(/^(callejón|calle|avenida|av\.)\s+/i, "");
 const grande = IGLESIA.numero || nombreCorto;
 const debajo = `${IGLESIA.calle} · ${IGLESIA.colonia}`;
 ---
 
-<Hueco siempre clase="placa" pie={COMO_LLEGAR.puerta || undefined}>
+<Hueco siempre clase="placa">
   <p class="placa__grande" aria-hidden="true">{grande}</p>
   <p class="placa__calle">
     {debajo}
