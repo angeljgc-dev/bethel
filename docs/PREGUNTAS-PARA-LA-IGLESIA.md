@@ -1,175 +1,129 @@
 # Lo que hay que preguntar en Bethel
 
-Ordenado por urgencia real. El primer bloque impide publicar; el segundo se resuelve en la
-primera semana; el tercero puede esperar.
+Ordenado por urgencia real. El primer bloque impide publicar el sitio; el segundo deja secciones
+enteras a medias; el tercero cambia texto que ya está escrito; el cuarto son fotos y archivos que
+hay que pedir.
 
-Conviene preguntarlo en una sola visita y anotar las respuestas tal cual las digan, sobre todo
-los horarios y el desglose del culto: eso va copiado al sitio casi literal.
+Conviene resolverlo en una sola visita y anotar las respuestas tal cual las digan, sobre todo los
+horarios y el desglose del culto: eso va copiado al sitio casi literal.
+
+---
+
+## Lo que ya sabemos
+
+Esto ya se sacó de fuentes públicas de la propia iglesia (Facebook, YouTube) o de lo que dijeron
+por escrito. No hace falta preguntarlo de nuevo, solo confirmarlo o corregirlo si algo cambió.
+
+| Dato | Valor | De dónde salió |
+|---|---|---|
+| Nombre en Facebook | Iglesia Casa Bethel ACyM | Facebook, cabecera de la página |
+| Nombre en YouTube | Casa De Dios Bethel | YouTube, canal de la iglesia |
+| Denominación | Alianza Cristiana y Misionera (ACyM) | Las siglas aparecen en el nombre, en Facebook y en YouTube |
+| Dirección | Los Robles Oriente, callejón Ceiba, Matías Romero, Oaxaca, CP 70304 | Facebook, apartado de información |
+| Celular | 972 727 6904 | Facebook, apartado de información |
+| Correo | betherlcasade@gmail.com, así está escrito en Facebook | Facebook, apartado de información |
+| Horario | Domingos de 10:00 a 13:00; martes y jueves a las 18:00 | Lo dijo la iglesia por escrito; coincide con lo que dice la portada de Facebook |
+| Prédicas | Siete servicios completos publicados en su canal de YouTube, de 91 a 128 minutos cada uno | Canal de YouTube de la iglesia |
 
 ---
 
 ## Bloque 1. Sin esto no hay sitio
 
-### Lo básico que la gente busca primero
+1. **¿El celular 972 727 6904 recibe WhatsApp?** Si no, se caen los botones de WhatsApp del
+   sitio, que son la única forma de contacto que tiene pensada el diseño.
 
-Estos cuatro datos son, medidos, lo que más se busca en el sitio de una iglesia: horarios 43%,
-actividades 29%, mapa 28%.
+2. **¿Qué nombre se publica: "Iglesia Casa Bethel ACyM" o "Casa de Dios Bethel"?** El nombre
+   aparece en el título de la página, en la portada, en el cierre, en el calendario y en los
+   mensajes de WhatsApp, así que hace falta uno solo y definitivo.
 
-1. **Horarios exactos de todos los cultos y actividades de la semana.** Día, hora de inicio, y
-   **cuánto dura cada uno**. La duración importa más de lo que parece: es de las primeras cosas
-   que quiere saber alguien que nunca ha ido, y casi ninguna iglesia la publica.
+3. **¿Quién es el responsable del aviso de privacidad?** Nombre de la persona o de la asociación
+   religiosa, y domicilio. Sin ese dato el aviso no cumple con la ley, y es obligatorio desde
+   marzo de 2025.
 
-2. **Dirección completa**, con calle, número, colonia y referencias reales de cómo llegar
-   ("frente a", "a dos cuadras de"). En un pueblo la referencia sirve más que el número.
+4. **¿Por dónde se entra?** Cómo se ve la puerta desde el callejón, si hay otra puerta que no es
+   la correcta, y junto a qué está el lugar. Es el miedo número uno de quien nunca ha ido, y hoy
+   la sección de cómo llegar tiene ese espacio vacío.
 
-3. **Dónde se estacionan** y si hay lugar. Y **por qué puerta se entra**, que es el miedo número
-   uno documentado del visitante nuevo: no saber a dónde ir al llegar.
-
-4. **Número de WhatsApp** con el que van a atender, **quién lo contesta**, y en qué **horario**.
-   Va a ser el canal principal del sitio.
-
-### El nombre y el lugar
-
-5. **¿El nombre completo es solo "Bethel" o lleva algo más?** ("Iglesia Cristiana Bethel",
-   "Centro Cristiano Bethel", una denominación, etc.)
-
-   Importa mucho más de lo que parece: **bethel.com es una megaiglesia de California con 14
-   millones de seguidores**, su grupo musical tiene 6 millones de suscriptores en YouTube y satura
-   la búsqueda global de la palabra. Además **bethel.org.mx ya está tomado** por otra iglesia en
-   la Ciudad de México, y hay al menos cinco congregaciones Bethel en el país.
-
-   **El dominio y el título del sitio tienen que llevar Matías Romero.** No se compite por
-   "Bethel"; se compite por "iglesia cristiana en Matías Romero".
-
-6. **¿Tienen ya página de Facebook o canal de YouTube?** ¿Con qué frecuencia publican? El sitio no
-   va a competir con eso: Facebook se queda con lo que caduca (avisos, transmisiones, fotos del
-   domingo) y el sitio con lo que no (horarios, dirección, qué esperar, quiénes son).
-
-### Qué pasa en el culto, minuto a minuto
-
-7. **Describir un domingo normal, en orden y con tiempos.** Por ejemplo: "los primeros 20 minutos
-   cantamos cuatro canciones, luego saludo y avisos, después la predicación de unos 40 minutos, y
-   cerramos con oración".
-
-   Esto es lo más valioso de toda la lista. **De siete sitios de iglesias analizados, ninguno en
-   español lo hace**, y es lo que elimina por completo la incertidumbre de quien nunca ha ido.
-
-8. **¿Cómo se viste la gente?** La respuesta honesta, no la aspiracional. ("Hay quien viene de
-   camisa y quien viene de playera.")
-
-9. **¿Se le pide a los visitantes que se pongan de pie o que se presenten?** Si es que sí, hay que
-   decirlo en el sitio, porque es de lo que más ansiedad genera. Si es que no, decirlo también,
-   porque tranquiliza.
-
-10. **¿Se puede llegar tarde y sentarse atrás sin problema?**
-
-11. **¿Se pasa canasta o charola?** Y si se pasa, **¿está bien decir en el sitio que del visitante
-    no se espera nada?** (Sí conviene decirlo, y mucho.)
-
-### Quiénes son
-
-12. **Nombre del pastor y cómo quiere aparecer.** Y si autoriza una **foto suya de frente,
-    mirando a cámara**, con su nombre y su función.
-
-    No es un capricho estético: con seguimiento ocular está medido que la gente mira los retratos
-    del personal real **10% más que sus biografías**, aunque las biografías ocupen tres veces más
-    espacio. Y la variable que lo hace funcionar es que sean **personas que de verdad están ahí**.
-
-13. **Los demás líderes** que quieran aparecer, con el mismo criterio.
-
-14. **La historia de la iglesia en tres o cuatro frases.** Desde cuándo existe, cómo empezó, qué
-    la distingue de las otras del pueblo.
+5. **¿El correo es betherlcasade@gmail.com o bethelcasade@gmail.com?** Así quedó escrito en su
+   Facebook y parece un error de dedo. Un correo mal escrito en el sitio es un correo que nadie
+   contesta.
 
 ---
 
-## Bloque 2. Antes de la primera semana
+## Bloque 2. Sin esto, secciones enteras se quedan a medias
 
-### Ministerio infantil, que se presenta como seguridad
+6. **El salón de niños:** si existe, para qué edades, cuántos adultos, dónde se deja al niño, cómo
+   es la entrega y la recogida, y quién está a cargo, con su autorización para aparecer. Sin esto
+   la sección de niños se publica reducida, y no se inventa ninguna línea.
 
-Este punto es a la vez obligación legal y el mejor argumento de venta con familias: el **65% de
-los padres** considera el programa infantil un factor de decisión.
+7. **El minuto a minuto real del domingo.** A qué hora empieza cada parte del culto y cuánto dura
+   cada una. Es lo que más tranquiliza a quien nunca ha ido, y hoy solo hay una propuesta a modo
+   de ejemplo, no un dato confirmado.
 
-15. **¿Cómo funciona la entrega y recogida de los niños?** ¿Hay etiquetas, contraseña, o alguna
-    forma de verificar quién puede recogerlos?
+8. **La historia de la iglesia en tres o cuatro frases:** desde cuándo existe, dónde empezó, y
+   cuánta gente es hoy. Es la apertura de la sección de quiénes son y hoy está vacía.
 
-16. **¿Cuántos adultos hay por grupo?** ¿Hay política de que nunca haya un adulto solo con niños?
+9. **Quién es quién:** nombre, función y una línea de cada persona que quiera aparecer, con su
+   autorización. Sin nombres esa parte no se publica.
 
-17. **¿Se revisa a los voluntarios que trabajan con menores?**
-
-18. **¿Quiénes son los adultos responsables?** Nombre, cara y función, con su autorización.
-
-**Advertencia que hay que decirles a ellos:** en el sitio **no va a haber ninguna foto de niños
-identificables**, ni nombres de niños en pies de foto. Tampoco en los nombres de archivo ni en el
-texto alternativo de las imágenes, que es un error invisible y muy común.
-
-Y **nunca** se combina foto de un niño con su nombre, el horario fijo y la dirección: eso le dice
-a un desconocido dónde va a estar ese niño el próximo domingo.
-
-Lo que sí se publica, y funciona muy bien: **las aulas vacías**, limpias y bien iluminadas, y el
-protocolo explicado en texto.
-
-### Prédicas
-
-19. **¿Graban las prédicas?** ¿Dónde quedan, en Facebook o YouTube?
-
-20. **¿Se pueden organizar por serie o tema?**
-
-    La calidad de la predicación es **el factor número uno de elección, con 83%**. Vale la pena
-    resolverlo bien.
-
-### Fotos
-
-21. **¿Tienen fotos propias?** Las que de verdad sirven:
-    - La **fachada** tal como se ve desde la calle por la que llega alguien
-    - El **estacionamiento** y la **entrada correcta**
-    - El **auditorio vacío**, para que se vea el tamaño real
-    - Un domingo normal, con la gente que de verdad va
-
-    Sobre esto último: **si son 60 personas, se muestran 60.** Fingir 600 garantiza que el
-    visitante se sienta engañado el domingo, y esa es una de las causas documentadas de que no
-    regrese.
-
-22. **¿Quién autoriza el uso de las fotos** donde salen miembros de la congregación?
-
-### Contacto y lenguaje
-
-23. **¿Hay alguien designado para recibir a los que llegan por primera vez?** Si lo hay, decirlo
-    en el sitio ayuda mucho.
-
-24. **¿Se puede ofrecer que alguien los reciba en la entrada** si avisan por WhatsApp?
-
-25. **¿Hay algún término que usen mucho y que un desconocido no entendería?** Hay que traducirlo o
-    quitarlo. Palabras como célula, koinonía, unción, avivamiento o "llamado" dejan fuera a quien
-    queremos que entre.
+10. **¿Qué es la reunión del martes y qué es la del jueves, y cuánto dura cada una?** Hoy solo se
+    tiene la hora en que empiezan.
 
 ---
 
-## Bloque 3. Puede esperar
+## Bloque 3. Preguntas que cambian texto que ya está escrito
 
-26. Calendario de eventos y actividades especiales.
-27. Grupos y ministerios activos, con su responsable.
-28. Si quieren una sección de peticiones de oración, y quién la atendería.
-29. Si necesitan segundo idioma o intérprete, según quién viva en la colonia.
-30. Testimonios de miembros. **Ojo:** con permiso explícito, y no se puede publicar ninguno que
-    diga que la iglesia curó una enfermedad.
-31. Si más adelante quieren recibir ofrendas por el sitio. Hoy la decisión es que no, y es la más
-    limpia: cero obligaciones fiscales y cero fricción con el visitante nuevo.
+11. **¿Cómo es la ofrenda en Casa Bethel?** Si se pasa una bolsa o un plato, en qué momento del
+    culto, y si se dice algo antes. Ya hay un texto escrito sobre esto y no se toca hasta que la
+    iglesia lo confirme o lo corrija: decir que sí cuando es no, o al revés, sería el error más
+    caro de toda la página.
+
+12. **¿Es cierto que si llegas tarde entras igual, y que puedes salirte antes sin que nadie
+    pregunte?** Con tres horas de culto, es una de las frases que más tranquiliza a un visitante
+    nuevo.
+
+13. **¿Dónde se estaciona la gente?** Cuántos carros caben, qué hacer si se llena, y cuánto se
+    camina desde ahí.
+
+14. **¿En qué horario contestan el teléfono y quién contesta?** Y cómo quiere aparecer esa
+    persona, aunque sea solo con su nombre.
+
+15. **¿Hay alguien que pueda recibir en la puerta a quien avise que va a llegar?** El sitio ya lo
+    ofrece en dos botones.
+
+16. **¿Cómo se viste la gente de verdad un domingo?** La respuesta honesta, no la aspiracional.
+
+17. **¿Quieren que sus videos se enlacen desde el sitio?** Son videos públicos, pero es su canal y
+    su decisión.
+
+18. **¿Quién predica en cada servicio?** No aparece ni en los títulos ni en las descripciones de
+    los videos. Si quieren que se muestre, hace falta el nombre y su autorización.
+
+19. **¿Prefieren el título completo de cada prédica o uno corto?** Los títulos originales llevan
+    subtítulo y no caben bien en la pantalla de un teléfono.
+
+20. **¿Hay número exterior en el callejón Ceiba?** Si lo hay, ese número puede ir grande en la
+    sección de cómo llegar, que es de las partes más útiles del sitio.
 
 ---
 
-## Una cosa que hay que explicarles
+## Bloque 4. Fotos, archivos y una última pregunta
 
-El sitio **no va a ser el canal por el que llegue la gente nueva**. Eso está medido: solo el
-**37%** de quienes buscan iglesia busca información en línea, mientras que el **85% asiste a un
-servicio** y el **68% habla con amigos**.
+Se necesitan tres cosas:
 
-El sitio es el **filtro de verificación**: corre después de que alguien invitó a un conocido y
-antes de que ese conocido se atreva a ir. Su trabajo es **quitar miedo**, no atraer desconocidos.
+- Una **foto de la fachada** con la puerta y el callejón, para que la persona reconozca el lugar
+  antes de llegar.
+- Una **foto del interior**, vacío o con permiso por escrito de quien salga en ella.
+- El **logotipo en archivo** (el círculo con la casa).
 
-Por eso el sitio va a incluir una herramienta pensada para los miembros: **un botón que arma una
-invitación lista para mandar por WhatsApp**, con horario, dirección, mapa y el tema de la próxima
-prédica. La investigación más sólida que encontramos dice que la gente va cuando alguien de
-confianza la invita, se ofrece a acompañarla, y hay razón para creer que le va a servir para algo
-que le duele.
+21. **El tema del próximo domingo**, si quieren que se use para armar la invitación por WhatsApp,
+    y quién sería el encargado de actualizarlo.
 
-El sitio no convence al desconocido. **Arma al miembro para que lo invite.**
+**Regla que no cambia:** en el sitio no se publica ninguna foto de un menor identificable, ni su
+nombre, ni en pies de foto, ni en el nombre del archivo, ni en el texto alternativo de la imagen.
+Y nunca se combina la foto de un niño con su nombre, el horario fijo y la dirección: eso le dice a
+un desconocido dónde va a estar ese niño el próximo domingo.
+
+**Sobre las ofrendas por el sitio:** hoy la decisión es que no se reciben ofrendas en línea, y es
+la más limpia: cero obligaciones fiscales y cero fricción con el visitante nuevo. Si más adelante
+la iglesia quiere revisar esto, es una decisión aparte y no urgente.

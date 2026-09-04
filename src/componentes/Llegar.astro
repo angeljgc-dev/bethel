@@ -1,0 +1,124 @@
+---
+/* Llegar. La pregunta 01: por dónde entro.
+
+   Es la sección con los dos huecos más caros de la página: cómo se ve la puerta
+   y dónde se estaciona uno. Mientras la iglesia no los conteste, esos párrafos
+   NO se escriben: se sostiene con la dirección, el mapa, la frase de llegar
+   tarde y la placa. Un portón verde inventado manda a alguien a la puerta
+   equivocada, que es exactamente lo que el candado existe para impedir. */
+
+import Boton from "./Boton.astro";
+import Placa from "./Placa.astro";
+import { IGLESIA, COMO_LLEGAR, CULTOS } from "../datos/iglesia";
+
+/* Las reuniones que no son el domingo. Mientras no sepamos qué es cada una, se
+   publica solo el día y la hora: un rótulo inventado ahí es jerga inventada dos
+   veces, primero el nombre y luego lo que pasa. */
+const semana = CULTOS.filter((c) => !c.principal);
+const horas = [...new Set(semana.map((c) => c.hora))];
+const dias = semana.map((c) => c.dia);
+const listaDias =
+  dias.length > 1 ? `${dias.slice(0, -1).join(", ")} y ${dias.at(-1)!.toLowerCase()}` : dias[0];
+const mismaHora = horas.length === 1;
+
+const parrafos = [
+  `${IGLESIA.calle}, en ${IGLESIA.colonia}, ${IGLESIA.ciudad}. El código postal es ${IGLESIA.cp}.`,
+  COMO_LLEGAR.puerta && `Se entra por ${COMO_LLEGAR.puerta}. ${COMO_LLEGAR.otraPuerta}`.trim(),
+  [COMO_LLEGAR.estacionamiento, COMO_LLEGAR.siSeLlena, COMO_LLEGAR.distancia]
+    .filter(Boolean)
+    .join(" "),
+].filter(Boolean) as string[];
+---
+
+<section class="llegar" id="llegar" aria-labelledby="llegar-titulo">
+  <div class="llegar__cabeza">
+    <p class="rotulo">Si nunca has venido · 1 de 7</p>
+    <h2 id="llegar-titulo">¿Por dónde entro?</h2>
+  </div>
+
+  <div class="texto">
+    {parrafos.map((p) => <p>{p}</p>)}
+    <p><strong>{COMO_LLEGAR.llegarTarde}</strong></p>
+    <div>
+      <Boton href={COMO_LLEGAR.mapa} variante="claro" aviso="se abre en Google Maps">
+        Abrir en el mapa
+      </Boton>
+    </div>
+
+    <div class="semana">
+      <h3>Y entre semana</h3>
+      {
+        mismaHora ? (
+          <p>
+            {listaDias}, a las {horas[0]}.
+          </p>
+        ) : (
+          <ul>
+            {semana.map((c) => (
+              <li>
+                {c.dia}, a las {c.hora}.
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      <p>Si quieres saber qué se hace cada día, pregúntanos por WhatsApp.</p>
+    </div>
+  </div>
+
+  <Placa />
+</section>
+
+<style>
+  .llegar {
+    position: relative;
+    z-index: 2;
+    background: var(--porton);
+    color: var(--cal-porton);
+    padding: 56px 20px 64px;
+    display: grid;
+    gap: 26px;
+  }
+  .llegar .rotulo {
+    color: var(--luz-clara);
+  }
+  .llegar h2 {
+    font-size: clamp(2.3rem, 9vw, 5.5rem);
+    margin-top: 8px;
+  }
+  .texto {
+    display: grid;
+    gap: 16px;
+    max-width: 34rem;
+  }
+  .texto strong {
+    color: #fff;
+  }
+  .semana {
+    display: grid;
+    gap: 8px;
+  }
+  .semana h3 {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+  }
+  .semana ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  @media (min-width: 900px) {
+    .llegar {
+      padding: 88px 64px;
+      grid-template-columns: 1.1fr 1fr;
+      column-gap: 64px;
+      align-items: start;
+    }
+    .llegar__cabeza {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

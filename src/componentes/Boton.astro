@@ -1,0 +1,47 @@
+---
+/* El boton.
+
+   Tres estilos y un solo tamano minimo. Todos llevan fondo solido: el boton es
+   texto de lectura y en la portada le pasa la franja de luz por debajo, asi que
+   un boton transparente se mide contra lo que haya detras y deja de cumplir el
+   piso de 7:1. La excepcion es el estilo claro, que vive sobre el panel verde,
+   donde el fondo solido ya lo pone la seccion.
+
+   El area tocable no baja de 44 px de alto y de ancho ni en la barra, que es
+   donde mas aprieta el espacio. */
+
+interface Props {
+  href: string;
+  variante?: "contorno" | "principal" | "whatsapp" | "claro";
+  /* Los de la barra: 44 px en vez de 48, que es el minimo, no el comodo. */
+  compacto?: boolean;
+  /* Lo que oye quien no ve a donde lleva el boton: "(se abre en WhatsApp)". */
+  aviso?: string;
+  descarga?: boolean;
+  clase?: string;
+}
+
+const {
+  href,
+  variante = "contorno",
+  compacto = false,
+  aviso,
+  descarga = false,
+  clase = "",
+} = Astro.props;
+
+const estilos: Record<string, string> = {
+  contorno: "",
+  principal: "boton--principal",
+  whatsapp: "boton--wa",
+  claro: "boton--claro",
+};
+
+const clases = ["boton", estilos[variante], compacto && "boton--compacto", clase]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<a class={clases} href={href} download={descarga ? true : undefined}>
+  <slot />{aviso && <span class="sr"> ({aviso})</span>}
+</a>

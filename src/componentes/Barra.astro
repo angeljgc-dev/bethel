@@ -1,0 +1,88 @@
+---
+/* La barra fija: la parte que nunca se mueve.
+
+   Lleva las tres cosas que la investigacion midio como mas buscadas: la hora,
+   donde es, y como preguntar. Ninguna de las tres desaparece al angostar la
+   pantalla: a 390 px la barra se parte en dos renglones antes que perder el
+   boton del mapa, porque el mapa es el 28% de lo que la gente busca.
+
+   El fondo es solido, no vidrio: sobre las secciones verdes un fondo
+   translucido cambia el contraste del texto segun por donde pase el scroll, y
+   eso no se puede auditar. */
+
+import Boton from "./Boton.astro";
+import { IGLESIA, CULTOS } from "../datos/iglesia";
+import { enlaceWhatsApp, mensajeGeneral } from "../lib/candado";
+
+const domingo = CULTOS.find((c) => c.principal)!;
+const whatsapp = enlaceWhatsApp(IGLESIA.whatsapp, mensajeGeneral(IGLESIA.marca));
+---
+
+<header class="barra">
+  <p class="barra__dato">
+    {domingo.dia}s {domingo.hora}
+    <small>· {IGLESIA.colonia}<span class="barra__ciudad">, {IGLESIA.ciudad}</span></small>
+  </p>
+  <nav class="barra__acciones" aria-label="Contacto">
+    <Boton href={whatsapp} variante="whatsapp" compacto aviso="se abre en WhatsApp">
+      WhatsApp
+    </Boton>
+    <Boton href="#llegar" compacto>Cómo llegar</Boton>
+  </nav>
+</header>
+
+<style>
+  .barra {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    min-height: var(--barra);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    background: var(--cal);
+    border-bottom: 1px solid rgba(28, 34, 31, 0.16);
+  }
+
+  .barra__dato {
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  /* La colonia es leyenda, no dato unico: 16 px es su piso. */
+  .barra__dato small {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--tinta-suave);
+  }
+  /* En dos renglones la ciudad se cae y la colonia se queda: quien lee esto en
+     el telefono ya sabe en que pueblo esta. */
+  .barra__ciudad {
+    display: none;
+  }
+
+  .barra__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* A 760 px el dato completo y los dos botones caben en un solo renglon. Por
+     debajo, la barra se parte antes que perder el boton del mapa. */
+  @media (min-width: 760px) {
+    .barra {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+    }
+    .barra__dato {
+      white-space: nowrap;
+    }
+    .barra__ciudad {
+      display: inline;
+    }
+  }
+</style>

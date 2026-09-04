@@ -1,16 +1,23 @@
 ---
+import { Font } from "astro:assets";
 import "../estilos/base.css";
+import Barra from "../componentes/Barra.astro";
 import { IGLESIA } from "../datos/iglesia";
 import { revisarAntesDePublicar, datosSinConfirmar } from "../lib/candado";
 
-/* Si quedan datos inventados, esto detiene el build de produccion. */
+/* Si quedan datos sin confirmar, esto detiene el build de produccion. */
 revisarAntesDePublicar();
 
 interface Props {
   titulo: string;
   descripcion: string;
+  /* La pagina que abre con la portada reserva la primera pantalla completa:
+     la banda de borrador y la portada se reparten 100svh menos la barra, asi
+     que la portada no queda empujada fuera de pantalla por el alto de la
+     banda, que cambia con el ancho y con el texto. */
+  primeraPantalla?: boolean;
 }
-const { titulo, descripcion } = Astro.props;
+const { titulo, descripcion, primeraPantalla = false } = Astro.props;
 const borrador = datosSinConfirmar();
 
 /* El sitio vive en un subdirectorio, asi que ninguna ruta interna puede empezar
@@ -29,17 +36,45 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Una linea, antes de pintar: sin esta marca no existe ninguna regla que
-         oculte contenido, asi que sin JavaScript se ve todo. -->
-    <script is:inline>document.documentElement.setAttribute("data-js", "");</script>
+         oculte contenido, asi que sin JavaScript se ve todo. La firma de la
+         portada es CSS y se apaga sola al terminar; si esa animacion no llega a
+         correr, la red de seguridad la da por terminada a los 2.2 s. Con
+         movimiento reducido no hay estado de entrada en absoluto. -->
+    <script is:inline>
+      (function () {
+        var h = document.documentElement;
+        h.dataset.js = "";
+        if (!matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+          h.dataset.firma = "lista";
+          return;
+        }
+        function fin() {
+          h.dataset.firma = "lista";
+        }
+        document.addEventListener(
+          "animationend",
+          function (e) {
+            if (e.animationName === "entra-luz") fin();
+          },
+          true,
+        );
+        setTimeout(fin, 2200);
+      })();
+    </script>
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
-    <meta name="theme-color" content="#0a1020" />
+    <meta name="theme-color" content="#f3ede3" />
     <link rel="icon" href={rutaDe("favicon.svg")} type="image/svg+xml" />
     <link rel="canonical" href={urlDelSitio} />
 
+    <!-- Las dos fuentes salen del propio dominio, con su subconjunto latino y
+         sus metricas de respaldo. -->
+    <Font cssVariable="--fuente-titular" preload />
+    <Font cssVariable="--fuente-cuerpo" preload />
+
     {
-      /* Mientras los datos sean de muestra, esta pagina NO puede salir en
-         Google: una direccion o un horario inventados en un resultado de
+      /* Mientras falten datos por confirmar, esta pagina NO puede salir en
+         Google: una direccion o un horario incompletos en un resultado de
          busqueda mandan a alguien a una puerta cerrada. Se quita solo cuando la
          iglesia confirme, porque depende de la misma bandera que la banda. */
       borrador && <meta name="robots" content="noindex, nofollow" />
@@ -56,7 +91,10 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
     <meta property="og:image" content={new URL("tarjeta.jpg", urlDelSitio).href} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Iglesia Cristiana Bethel, Matías Romero. Domingos 10:00." />
+    <meta
+      property="og:image:alt"
+      content={`${IGLESIA.nombreCompleto}, ${IGLESIA.ciudad}. Domingos 10:00.`}
+    />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Google no busca "Bethel" para encontrar esta iglesia: busca "iglesia
@@ -73,6 +111,7 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
           streetAddress: IGLESIA.direccion,
           addressLocality: IGLESIA.ciudad,
           addressRegion: IGLESIA.estado,
+          postalCode: IGLESIA.cp,
           addressCountry: "MX",
         },
         telephone: `+52${IGLESIA.telefonoVisible.replace(/\s/g, "")}`,
@@ -81,73 +120,43 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
   </head>
 
   <body>
-    <!-- Resplandores de fondo. Se mueven solo con translate3d y scale, que la
-         GPU compone sin repintar. Decorativos, por eso quedan fuera del arbol
-         de accesibilidad. -->
-    <div class="aura" aria-hidden="true">
-      <div class="aura__mancha aura__mancha--1"></div>
-      <div class="aura__mancha aura__mancha--2"></div>
-    </div>
+    <a class="saltar" href="#horario">Ir al horario y la dirección</a>
+    <a class="saltar" href="#contenido">Ir al contenido</a>
 
-    {
-      borrador && (
-        <div class="borrador no-imprimir" role="status">
-          <strong>Borrador.</strong> Los horarios, la dirección y los nombres de esta página están
-          inventados para poder verla armada. No se puede publicar hasta sustituirlos por los de la
-          iglesia.
-        </div>
-      )
-    }
+    <Barra />
 
-    <slot />
+    <main id="contenido">
+      <div class:list={["primera", primeraPantalla && "primera--llena"]}>
+        {
+          borrador && (
+            <p class="borrador no-imprimir" role="status">
+              <strong>Borrador.</strong> El horario, la dirección y los enlaces de esta página ya
+              son los de la iglesia; lo que falta (por dónde se entra, qué pasa adentro, el salón de
+              niños y quién es quién) sigue sin confirmar. No se publica hasta completarlo.
+            </p>
+          )
+        }
+        <slot name="primera" />
+      </div>
 
-    <script is:inline>
-      /* En aparatos modestos o con ahorro de datos se apagan las manchas y el
-         vidrio esmerilado pasa a superficie solida. Se marca en el propio
-         documento para que decida el CSS y no el JavaScript.
-         Si alguna de estas APIs no existe (Safari no las expone), no pasa nada:
-         el sitio ya funciona sin ellas, solo no ahorra. */
-      (function () {
-        var c = navigator.connection || {};
-        var pobre =
-          c.saveData === true ||
-          /^(slow-2g|2g|3g)$/.test(c.effectiveType || "") ||
-          (navigator.deviceMemory || 8) <= 2 ||
-          (navigator.hardwareConcurrency || 8) <= 4;
-        if (pobre) document.documentElement.setAttribute("data-ligero", "");
-      })();
-    </script>
+      <slot />
+    </main>
 
     <script>
-      /* Entrada de secciones. El estado oculto lo activa data-js en el head y
-         lo quita este observador; si algo de esto falla, el CSS sin data-js ya
-         muestra todo. Con movimiento reducido no se oculta nada ni se observa. */
-      const quietud = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (quietud) {
-        document.documentElement.removeAttribute("data-js");
-      } else {
-        const vigia = new IntersectionObserver(
-          (entradas) => {
-            for (const e of entradas) {
-              if (!e.isIntersecting) continue;
-              e.target.classList.add("visible");
-              vigia.unobserve(e.target);
-            }
-          },
-          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
-        );
-        document.querySelectorAll(".entra").forEach((o) => vigia.observe(o));
-      }
+      /* El cargador decide si este aparato recibe movimiento antes de pedir una
+         sola linea de GSAP. Nada mas cuelga de aqui. */
+      import { arrancarMovimiento } from "../movimiento/cargador";
+      arrancarMovimiento();
     </script>
 
     <style>
-      .borrador {
-        background: #7a2540;
-        color: #ffe9f0;
-        font-size: var(--fs-legal);
-        line-height: 1.5;
-        padding: var(--e-3) var(--e-4);
-        text-align: center;
+      /* La primera pantalla: banda de borrador y portada se reparten lo que
+         queda del viewport bajo la barra. Cuando la banda desaparezca, la
+         portada se queda con todo sin tocar una linea. */
+      .primera--llena {
+        min-height: calc(100svh - var(--barra));
+        display: grid;
+        grid-template-rows: auto 1fr;
       }
     </style>
   </body>

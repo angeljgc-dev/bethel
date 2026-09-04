@@ -1,0 +1,60 @@
+---
+/* La placa de la puerta.
+
+   Era el hueco de foto mejor resuelto de los tres conceptos: un número enorme y
+   debajo la calle. La dirección real no trae número exterior, así que el número
+   no se inventa: manda la palabra que sí existe, "Ceiba", y si algún día
+   aparece el número entra en `IGLESIA.numero` y vuelve a ser el protagonista,
+   que es lo que una persona busca en una fachada.
+
+   Se publica siempre, con foto o sin ella, porque lo que dice es verdad y le
+   sirve a quien está buscando la puerta. */
+
+import Hueco from "./Hueco.astro";
+import { IGLESIA, COMO_LLEGAR } from "../datos/iglesia";
+
+/* La palabra grande es el número si lo hay, y si no el nombre del callejón sin
+   la palabra callejón. */
+const nombreCorto = IGLESIA.calle.replace(/^(callejón|calle|avenida|av\.)\s+/i, "");
+const grande = IGLESIA.numero || nombreCorto;
+const debajo = `${IGLESIA.calle} · ${IGLESIA.colonia}`;
+---
+
+<Hueco siempre clase="placa" pie={COMO_LLEGAR.puerta || undefined}>
+  <p class="placa__grande" aria-hidden="true">{grande}</p>
+  <p class="placa__calle">
+    {debajo}
+    {COMO_LLEGAR.puerta && <small>{COMO_LLEGAR.puerta}</small>}
+  </p>
+</Hueco>
+
+<style>
+  .placa__grande {
+    position: relative;
+    z-index: 1;
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: clamp(4.5rem, 24vw, 9rem);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--cal-porton);
+  }
+  .placa__calle {
+    position: relative;
+    z-index: 1;
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.15;
+    margin-top: 8px;
+    color: var(--cal-porton);
+  }
+  .placa__calle small {
+    display: block;
+    font-family: var(--cuerpo);
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--luz-clara);
+    margin-top: 6px;
+  }
+</style>

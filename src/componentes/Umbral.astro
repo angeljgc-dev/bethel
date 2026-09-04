@@ -1,0 +1,138 @@
+---
+/* El umbral: cruzar el portón.
+
+   Dos paneles del mismo tamaño, uno encima del otro. El de arriba es el portón
+   verde y se recorta como un ojo de cerradura hasta desaparecer; debajo aparece
+   la sala, que es la respuesta a "cuánto dura".
+
+   Tres cosas que son decisiones, no adorno:
+
+   1. El portón va ANTES que Adentro en el HTML. Sin JavaScript se cruza el
+      portón y después se entra, nunca al revés.
+   2. Toda la geometría del cruce (el alto de la pista, los dos paneles
+      superpuestos, el recorte) cuelga de html[data-anima], que solo pone la
+      coreografía cuando GSAP ya está. Sin JavaScript, con GSAP caído o con
+      movimiento reducido, esto es un panel corto y una sección normal, apilados
+      y completos.
+   3. El dato que la maqueta escondía aquí ("adentro dura tanto") ya no vive en
+      un panel decorativo a media posición de scroll: es la pregunta 02, con su
+      encabezado, su dato y su cuerpo, en su posición de reposo. */
+
+import { CULTOS, PRIMERA_VEZ } from "../datos/iglesia";
+import { finDe, duracionEnHoras } from "../lib/candado";
+
+const domingo = CULTOS.find((c) => c.principal)!;
+const fin = finDe(domingo);
+const dura = duracionEnHoras(domingo.minutos);
+---
+
+<div class="umbral">
+  <div class="umbral__porton" aria-hidden="true">
+    <p class="cruce">Cruzas el portón.</p>
+  </div>
+
+  <section class="umbral__adentro" id="adentro" aria-labelledby="adentro-titulo">
+    <p class="rotulo">Ya adentro · 2 a 6 de 7</p>
+    <h2 id="adentro-titulo">Esto es lo que va a pasar</h2>
+    <p class="entrada">Un domingo normal, con tiempos. Para que no haya sorpresas.</p>
+
+    <div class="pregunta">
+      <h3>¿Cuánto dura?</h3>
+      <p class="dato-grande">{dura}</p>
+      <p>
+        Empieza a las {domingo.hora} y termina a las {fin}. {PRIMERA_VEZ.salir}
+      </p>
+    </div>
+  </section>
+</div>
+
+<style>
+  .umbral {
+    position: relative;
+  }
+  /* La pista que dura el cruce. Solo existe con la coreografía puesta. */
+  :global(html[data-anima]) .umbral {
+    height: 200svh;
+  }
+
+  .umbral__porton,
+  .umbral__adentro {
+    position: relative;
+    padding: 40px 20px;
+  }
+
+  :global(html[data-anima]) .umbral__porton,
+  :global(html[data-anima]) .umbral__adentro {
+    height: calc(100svh - var(--barra));
+    padding: 24px 20px;
+    overflow: hidden;
+  }
+  /* Adentro sube a ocupar el mismo sitio que el portón, y el portón se queda
+     encima para recortarse. */
+  :global(html[data-anima]) .umbral__adentro {
+    margin-top: calc(-100svh + var(--barra));
+    z-index: 1;
+  }
+  :global(html[data-anima]) .umbral__porton {
+    z-index: 2;
+  }
+
+  .umbral__porton {
+    background: var(--porton);
+    color: var(--cal-porton);
+    display: grid;
+    align-content: center;
+  }
+  .cruce {
+    font-family: var(--titular);
+    font-weight: 600;
+    line-height: 1.02;
+    font-size: clamp(2rem, 8vw, 4.5rem);
+    max-width: 14ch;
+  }
+
+  .umbral__adentro {
+    background: var(--techo);
+    color: var(--cal-porton);
+    display: grid;
+    align-content: start;
+    gap: 10px;
+  }
+  .umbral__adentro .rotulo {
+    color: var(--luz);
+  }
+  .umbral__adentro h2 {
+    font-size: clamp(2.1rem, 8.5vw, 5rem);
+  }
+  .entrada {
+    color: var(--techo-suave);
+    max-width: 34rem;
+  }
+  .pregunta {
+    margin-top: 14px;
+    display: grid;
+    gap: 6px;
+    max-width: 34rem;
+  }
+  .pregunta h3 {
+    font-size: clamp(1.5rem, 6vw, 2.4rem);
+  }
+  .dato-grande {
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: clamp(2.6rem, 12vw, 4.6rem);
+    line-height: 1;
+    color: var(--luz);
+  }
+
+  @media (min-width: 900px) {
+    .umbral__porton,
+    .umbral__adentro {
+      padding: 64px;
+    }
+    :global(html[data-anima]) .umbral__porton,
+    :global(html[data-anima]) .umbral__adentro {
+      padding: 48px 64px;
+    }
+  }
+</style>

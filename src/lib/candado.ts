@@ -33,6 +33,30 @@ export function revisarAntesDePublicar(): void {
   console.warn(mensaje);
 }
 
+/* -------------------------------------------------------------------- horas
+
+   La hora de salida NO se escribe a mano en ninguna parte: sale de la hora de
+   entrada mas los minutos que dura. Asi cambiar "10:00" por "10:30" en
+   iglesia.ts mueve a la vez la barra, la portada, la invitacion, la linea de
+   tiempo y el archivo de calendario, que era justo lo que antes se olvidaba en
+   uno de los cinco.
+
+   minutos en null quiere decir que no sabemos cuanto dura: no hay hora de
+   salida que publicar y quien la pida recibe null, no una hora inventada. */
+export function finDe(culto: { hora: string; minutos: number | null }): string | null {
+  if (culto.minutos === null) return null;
+  const [h, m] = culto.hora.split(":").map(Number);
+  const total = (h * 60 + m + culto.minutos) % (24 * 60);
+  return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+}
+
+/* "180" se lee en la pagina como "tres horas", no como un numero de minutos. */
+export function duracionEnHoras(minutos: number): string {
+  const horas = minutos / 60;
+  if (Number.isInteger(horas)) return horas === 1 ? "1 hora" : `${horas} horas`;
+  return `${minutos} minutos`;
+}
+
 /* ---------------------------------------------------------------- WhatsApp */
 
 /* La iglesia expone SU numero y la persona escribe cuando quiere. Eso invierte
@@ -40,6 +64,18 @@ export function revisarAntesDePublicar(): void {
    ellos no le cuesta nada. Por eso no hay formulario. */
 export function enlaceWhatsApp(numero: string, texto: string): string {
   return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+}
+
+/* El mensaje de la barra y del cierre. Corto, sin promesas, y lo completa la
+   persona. El sitio viejo mandaba "Hola, quiero saber mas de la iglesia", que
+   pide y no dice nada. */
+export function mensajeGeneral(marca: string): string {
+  return `Hola. Vi la página de ${marca} y tengo una pregunta.`;
+}
+
+/* El de quien ya decidio venir y quiere que alguien lo reciba. */
+export function mensajeVisita(marca: string): string {
+  return `Hola. Vi la página de ${marca} y quiero ir el domingo. ¿Alguien me puede recibir en la puerta?`;
 }
 
 /* La invitacion de un miembro a un conocido. Las tres condiciones que documenta
@@ -50,17 +86,21 @@ export function enlaceWhatsApp(numero: string, texto: string): string {
    El enlace va armado en el HTML por el build, asi que funciona sin JavaScript.
    La tarjeta visual la pinta WhatsApp desde og:image: cero bytes en el cliente. */
 export function invitacion(opciones: {
+  marca: string;
   ciudad: string;
   colonia: string;
+  calle: string;
   hora: string;
   fin: string;
   tema?: string;
   sitio: string;
 }): string {
-  const { colonia, hora, fin, tema, sitio } = opciones;
+  const { marca, colonia, calle, hora, fin, tema, sitio } = opciones;
+  /* El permiso de irse antes va en la invitacion: con tres horas es la
+     diferencia entre invitar y comprometer a alguien que no conoce a nadie. */
   const lineas = [
-    `Hola. Este domingo voy a la iglesia Bethel, aquí en ${colonia}.`,
-    `Empieza a las ${hora} y salimos como a las ${fin}.`,
+    `Hola. Este domingo voy a ${marca}, aquí en ${colonia}.`,
+    `Es de ${hora} a ${fin}, en el ${calle.toLowerCase()}. Puedes irte antes si necesitas.`,
     ``,
     `Si quieres paso por ti y entramos juntos. No tienes que hacer nada ni decir nada allá.`,
   ];

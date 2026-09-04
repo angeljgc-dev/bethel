@@ -1,0 +1,369 @@
+---
+/* La portada: la luz de las diez.
+
+   Tres capas de fondo (el muro con su ventana, la franja de sol que entra por
+   la celosia, y la cortina que solo existe cuando la coreografia esta puesta) y
+   tres piezas de contenido que ya estan en su sitio desde el primer pintado: la
+   frase, la tarjeta del horario y los dos botones.
+
+   Dos reglas que se pagaron caras y no se tocan:
+
+   1. El titular no se oculta nunca. Sale del HTML en opacidad 1 y sin
+      transform. La firma solo existe dentro de una animacion de CSS, bajo
+      html[data-js] y mientras dura; si GSAP llega tarde o no llega, aqui no
+      cambia nada.
+   2. Debajo del texto de lectura hay una hoja de cal solida. La franja de luz
+      pasa por detras de esa hoja, no por debajo de la letra: asi el fondo real
+      del rotulo y del apoyo es cal plano y no un ocre a 4.89 de contraste. */
+
+import Boton from "./Boton.astro";
+import { IGLESIA, CULTOS } from "../datos/iglesia";
+import { finDe, duracionEnHoras } from "../lib/candado";
+
+const domingo = CULTOS.find((c) => c.principal)!;
+const fin = finDe(domingo);
+const dura = duracionEnHoras(domingo.minutos);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<section class="portada" id="inicio">
+  <div class="pared" aria-hidden="true">
+    <div class="ventana"></div>
+  </div>
+  <div class="cortina" aria-hidden="true"></div>
+  <div class="luz" aria-hidden="true"></div>
+
+  <div class="portada__texto">
+    <p class="rotulo">{IGLESIA.nombreCompleto} · {IGLESIA.ciudad}, {IGLESIA.estado}</p>
+    <h1 class="titular">
+      <span class="linea"><span>Aquí se puede</span></span><span class="linea"><span>llegar</span
+        ></span><span class="linea linea--rompe"><span>cansado.</span></span>
+    </h1>
+    <p class="apoyo">No hace falta que traigas nada resuelto.</p>
+  </div>
+
+  <div class="datos" id="horario">
+    <div class="dato">
+      <span class="rotulo">{domingo.dia}s</span>
+      <strong class="hora">{domingo.hora}</strong>
+      <span class="nota">Termina a las {fin}. Son {dura}, y puedes salir antes.</span>
+    </div>
+    <div class="dato">
+      <span class="rotulo">Dónde</span>
+      <strong>{IGLESIA.direccion}</strong>
+      <span class="nota">{IGLESIA.ciudad}, {IGLESIA.estado}.</span>
+    </div>
+  </div>
+
+  <div class="acciones">
+    <Boton href="#llegar" variante="principal">Si nunca has venido</Boton>
+    <Boton href={`${base}/domingo.ics`} descarga aviso="descarga un archivo de calendario">
+      Guardar en mi calendario
+    </Boton>
+  </div>
+</section>
+
+<style>
+  .portada {
+    position: relative;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    /* Ritmo apretado a proposito: los dos botones tienen que caber en la
+       primera pantalla de un telefono con la banda de borrador puesta. */
+    gap: 10px;
+    padding: 8px 20px 10px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .pared {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  /* El triangulo de luz de manana sobre el muro encalado, hecho en CSS: es el
+     hueco de una foto que todavia no existe, resuelto como pieza terminada. */
+  .ventana {
+    position: absolute;
+    right: -12%;
+    top: -6%;
+    width: 80vw;
+    height: 62vh;
+    background: linear-gradient(
+      205deg,
+      rgba(242, 193, 94, 0.42),
+      rgba(242, 193, 94, 0.08) 55%,
+      transparent 75%
+    );
+    clip-path: polygon(28% 0, 100% 0, 100% 100%);
+    transform-origin: 100% 0;
+  }
+
+  /* La franja de sol que entra por la celosia: color calido con la sombra de
+     los bloques encima. */
+  .luz {
+    position: absolute;
+    top: -40%;
+    height: 180%;
+    z-index: 2;
+    left: 50%;
+    width: 78vw;
+    margin-left: -39vw;
+    background-image: var(--celosia),
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(242, 193, 94, 0.62) 28%,
+        rgba(242, 193, 94, 0.62) 72%,
+        transparent
+      );
+    background-size: var(--modulo) var(--modulo), 100% 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent);
+    transform: skewX(-6deg);
+    will-change: transform;
+  }
+  /* El marco del tile es la sombra: se atenua para que sea sombra y no reja. */
+  .luz::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(230, 221, 205, 0.88);
+    -webkit-mask-image: var(--celosia);
+    mask-image: var(--celosia);
+    -webkit-mask-size: var(--modulo) var(--modulo);
+    mask-size: var(--modulo) var(--modulo);
+  }
+
+  /* La cortina de verde que tapa la portada al salir. Solo tiene sentido con la
+     coreografia puesta; sin ella no existe. */
+  .cortina {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--porton);
+    clip-path: inset(100% 0 0 0);
+  }
+  :global(html:not([data-anima])) .cortina {
+    display: none;
+  }
+
+  .portada__texto {
+    position: relative;
+    z-index: 3;
+    max-width: 72%;
+  }
+  /* Las dos hojas de cal. Son dos porque el titular es width: max-content y se
+     sale de la columna a proposito. */
+  .portada__texto::before,
+  .titular::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--cal);
+    border-radius: 10px;
+  }
+  .portada__texto::before {
+    inset: -16px -20px -14px -20px;
+    box-shadow: 0 22px 44px -30px rgba(28, 34, 31, 0.5);
+  }
+  .titular::before {
+    inset: -6px -20px -6px -20px;
+  }
+
+  .rotulo {
+    margin-bottom: 4px;
+  }
+
+  .titular {
+    position: relative;
+    font-size: clamp(2.4rem, 10vw, 6.2rem);
+    width: max-content;
+    max-width: none;
+  }
+  .linea {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+  .linea > span {
+    display: inline-block;
+  }
+  /* La tercera linea rompe la columna de texto a proposito. */
+  .linea--rompe > span {
+    margin-left: 2.2em;
+  }
+
+  .apoyo {
+    margin-top: 4px;
+    font-size: 1em;
+    color: var(--tinta-suave);
+    max-width: 24rem;
+  }
+
+  /* La tarjeta del horario. El fondo va ya compuesto y solido, no translucido:
+     es el bloque con mas datos de la pagina y su contraste no puede depender de
+     por donde pase la franja de luz. */
+  .datos {
+    position: relative;
+    z-index: 3;
+    --halo: 10px;
+    display: grid;
+    gap: 8px;
+    background: var(--miel);
+    border-radius: 18px;
+    padding: 10px 16px;
+    box-shadow:
+      0 0 0 var(--halo) rgba(242, 193, 94, 0.55),
+      0 24px 40px -24px rgba(28, 34, 31, 0.35);
+  }
+  .dato {
+    display: grid;
+    gap: 2px;
+  }
+  .dato .rotulo {
+    margin: 0;
+    color: var(--tinta);
+  }
+  .dato strong {
+    font-family: var(--titular);
+    font-weight: 600;
+    font-size: 1.3em;
+    line-height: 1.05;
+  }
+  .dato .hora {
+    font-size: 2.3em;
+  }
+  /* Las dos notas llevan dato: son cuerpo, 18 px, no leyenda. */
+  .dato .nota {
+    color: var(--tinta);
+    font-size: 1em;
+  }
+
+  .acciones {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+  }
+
+  @media (min-width: 900px) {
+    .portada {
+      grid-template-columns: 1.25fr 1fr;
+      grid-template-rows: 1fr auto;
+      align-items: end;
+      padding: 56px 64px 64px;
+      column-gap: 48px;
+    }
+    .portada__texto {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: center;
+      max-width: 26rem;
+    }
+    .titular {
+      font-size: clamp(4rem, 7.6vw, 6.2rem);
+    }
+    .datos {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: end;
+      max-width: 30rem;
+    }
+    .acciones {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    .luz {
+      left: auto;
+      right: 4%;
+      width: 46vw;
+      margin-left: 0;
+    }
+    .ventana {
+      width: 50vw;
+      height: 70vh;
+    }
+  }
+
+  /* --------------------------------------------------------------- la firma
+
+     Entera en CSS. El estado base es el visible; el estado de entrada vive solo
+     dentro de la animacion, solo bajo html[data-js] y solo mientras la firma
+     dura, que en el selector se escribe :not([data-firma]). El titular termina
+     por si solo a los 780 ms del primer pintado, llegue GSAP cuando llegue. */
+  @keyframes sube-linea {
+    from {
+      transform: translateY(112%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes entra-luz {
+    from {
+      transform: translateX(-140%) skewX(-22deg);
+    }
+    to {
+      transform: skewX(-6deg);
+    }
+  }
+  @keyframes abre-ventana {
+    from {
+      transform: scale(0.92);
+      opacity: 0.6;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes posa-halo {
+    from {
+      box-shadow:
+        0 0 0 0 rgba(242, 193, 94, 0),
+        0 24px 40px -24px rgba(28, 34, 31, 0.35);
+    }
+    to {
+      box-shadow:
+        0 0 0 10px rgba(242, 193, 94, 0.55),
+        0 24px 40px -24px rgba(28, 34, 31, 0.35);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-js]:not([data-firma])) .linea > span {
+      animation: sube-linea 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    :global(html[data-js]:not([data-firma])) .linea:nth-child(2) > span {
+      animation-delay: 80ms;
+    }
+    :global(html[data-js]:not([data-firma])) .linea:nth-child(3) > span {
+      animation-delay: 160ms;
+    }
+    :global(html[data-js]:not([data-firma])) .luz {
+      animation: entra-luz 1600ms cubic-bezier(0.45, 0, 0.15, 1) 100ms both;
+    }
+    :global(html[data-js]:not([data-firma])) .ventana {
+      animation: abre-ventana 1500ms cubic-bezier(0.2, 0.7, 0.3, 1) 200ms both;
+    }
+    :global(html[data-js]:not([data-firma])) .datos {
+      animation: posa-halo 700ms ease-out 1000ms both;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .linea > span,
+    .ventana {
+      transform: none;
+      opacity: 1;
+    }
+    .luz {
+      transform: skewX(-6deg);
+    }
+  }
+</style>
