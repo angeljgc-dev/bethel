@@ -34,12 +34,16 @@ const hayResponsables = NINOS.responsables.length > 0;
   <div class="ninos__luz" aria-hidden="true"></div>
 
   <div class="ninos__caja">
-    <p class="rotulo">Con los niños · 7 de 7</p>
-    <h2 id="ninos-titulo">¿Qué hago con mis hijos?</h2>
+    <div class="ninos__cabeza">
+      <p class="rotulo">Con los niños · 7 de 7</p>
+      <h2 id="ninos-titulo">¿Qué hago con mis hijos?</h2>
 
-    {NINOS.edades && <p class="ninos__dato">{NINOS.edades}</p>}
-    {NINOS.salon && <p>{NINOS.salon}</p>}
-    <p>{NINOS.quedarse}</p>
+      {NINOS.edades && <p class="ninos__dato">{NINOS.edades}</p>}
+      {NINOS.salon && <p>{NINOS.salon}</p>}
+      <p>{NINOS.quedarse}</p>
+    </div>
+
+    <div class="ninos__cuerpo">
 
     {
       cuidado.length > 0 && (
@@ -73,6 +77,7 @@ const hayResponsables = NINOS.responsables.length > 0;
       <Boton href={salon} variante="whatsapp" aviso="se abre en WhatsApp">
         Quiero conocer el salón antes
       </Boton>
+    </div>
     </div>
   </div>
 </section>
@@ -152,6 +157,27 @@ const hayResponsables = NINOS.responsables.length > 0;
     }
     .ninos__luz {
       height: 132px;
+    }
+  }
+
+  /* En pantalla ancha la seccion no se queda pegada a la izquierda con la
+     mitad derecha vacia: la pregunta a un lado y las respuestas al otro. */
+  .ninos__cabeza,
+  .ninos__cuerpo {
+    display: grid;
+    gap: inherit;
+  }
+  @media (min-width: 900px) {
+    .ninos__caja {
+      max-width: 72rem;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      column-gap: 64px;
+      align-items: start;
+    }
+    .ninos__cabeza {
+      position: sticky;
+      top: 120px;
     }
   }
 </style>

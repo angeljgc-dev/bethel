@@ -49,13 +49,16 @@ const conResalte = 2;
   <div class="invitar__franja" aria-hidden="true"></div>
 
   <div class="invitar__caja">
-    <p class="rotulo">Para quien ya viene</p>
-    <h2 id="invitar-titulo">Invita a alguien</h2>
-    <p>
-      Casi nadie llega a una iglesia por internet. Llega porque alguien lo invitó y se ofreció a
-      acompañarlo. Este botón arma el mensaje: le pones el nombre y lo mandas.
-    </p>
+    <div class="invitar__cabeza">
+      <p class="rotulo">Para quien ya viene</p>
+      <h2 id="invitar-titulo">Invita a alguien</h2>
+      <p>
+        Casi nadie llega a una iglesia por internet. Llega porque alguien lo invitó y se ofreció a
+        acompañarlo. Este botón arma el mensaje: le pones el nombre y lo mandas.
+      </p>
+    </div>
 
+    <div class="invitar__cuerpo">
     <div class="globo">
       {
         lineas.map((linea, i) => (
@@ -82,6 +85,7 @@ const conResalte = 2;
       Se abre en tu WhatsApp con el mensaje escrito. Puedes cambiar lo que quieras antes de
       mandarlo. El nombre no sale de tu teléfono.
     </p>
+    </div>
   </div>
 </section>
 
@@ -192,6 +196,25 @@ const conResalte = 2;
     }
     .invitar__franja {
       height: 160px;
+    }
+  }
+
+  .invitar__cabeza,
+  .invitar__cuerpo {
+    display: grid;
+    gap: inherit;
+  }
+  @media (min-width: 900px) {
+    .invitar__caja {
+      max-width: 72rem;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      column-gap: 64px;
+      align-items: start;
+    }
+    .invitar__cabeza {
+      position: sticky;
+      top: 120px;
     }
   }
 </style>

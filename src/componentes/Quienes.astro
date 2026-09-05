@@ -113,7 +113,9 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
     position: relative;
     z-index: 1;
     background: var(--techo);
-    padding: 22px 20px 26px;
+    /* El umbral que la envuelve ya pone el margen lateral: aqui solo el
+       vertical, o el rotulo queda al doble de margen que el resto. */
+    padding: 22px 0 26px;
     display: grid;
     gap: 8px;
   }
@@ -180,7 +182,7 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
 
   @media (min-width: 900px) {
     .quienes__banda {
-      padding: 28px 64px 34px;
+      padding: 28px 0 34px;
     }
     .quienes__cola,
     .quienes__mision {
@@ -189,6 +191,26 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
     .quienes__rejilla {
       grid-template-columns: repeat(4, 1fr);
       gap: 26px 22px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .quienes__banda {
+      max-width: none;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      column-gap: 48px;
+      align-items: start;
+    }
+    .quienes__banda h2 {
+      max-width: none;
+    }
+    .quienes__cola {
+      max-width: none;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      column-gap: 64px;
+      align-items: start;
     }
   }
 </style>

@@ -174,6 +174,13 @@ const urlDelSitio = new URL(`${base}/`, Astro.site).href;
         min-height: calc(100svh - var(--barra));
         display: grid;
         grid-template-rows: auto 1fr;
+        /* La unica columna se ata al viewport: sin el minmax, el ancho
+           intrinseco de la portada la ensanchaba a 328 px en pantallas de
+           320 y aparecia una barra horizontal. */
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .primera--llena > * {
+        min-width: 0;
       }
     </style>
   </body>

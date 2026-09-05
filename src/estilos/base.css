@@ -309,3 +309,12 @@ img {
     transform: none;
   }
 }
+
+/* Ninguna pieza de primer nivel puede medir mas que la pantalla. A 320 px la
+   banda y la portada se iban a 328 por su ancho intrinseco y aparecia una
+   barra horizontal de 8 px. */
+body > *,
+main > * {
+  min-width: 0;
+  max-width: 100%;
+}

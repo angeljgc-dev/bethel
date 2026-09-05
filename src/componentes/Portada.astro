@@ -73,7 +73,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     position: relative;
     min-height: 0;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto auto;
+    /* La seccion mide lo que mide la pantalla; el contenido va centrado en
+       vertical, junto, sin que la fila del medio se estire para rellenar. */
+    align-content: center;
     /* Ritmo apretado a proposito: los dos botones tienen que caber en la
        primera pantalla de un telefono con la banda de borrador puesta. */
     gap: 10px;
@@ -167,24 +170,23 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   .portada__texto {
     position: relative;
     z-index: 3;
-    max-width: 72%;
+    /* El bloque mide lo que mide la linea mas ancha del titular y nada mas:
+       una sola hoja, rectangular, sin escalones. Si el titular no cabe,
+       envuelve dentro del bloque en vez de salirse de el. */
+    width: fit-content;
+    max-width: 100%;
+    padding: 14px 18px 12px;
   }
   /* Las dos hojas de cal. Son dos porque el titular es width: max-content y se
      sale de la columna a proposito. */
-  .portada__texto::before,
-  .titular::before {
+  .portada__texto::before {
     content: "";
     position: absolute;
     z-index: -1;
+    inset: 0;
     background: var(--cal);
-    border-radius: 10px;
-  }
-  .portada__texto::before {
-    inset: -16px -20px -14px -20px;
+    border-radius: 12px;
     box-shadow: 0 22px 44px -30px rgba(28, 34, 31, 0.5);
-  }
-  .titular::before {
-    inset: -6px -20px -6px -20px;
   }
 
   .rotulo {
@@ -194,8 +196,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   .titular {
     position: relative;
     font-size: clamp(2.4rem, 10vw, 6.2rem);
+    /* Ancho de contenido, pero nunca mas que el bloque. */
     width: max-content;
-    max-width: none;
+    max-width: 100%;
   }
   .linea {
     display: block;
@@ -206,8 +209,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     display: inline-block;
   }
   /* La tercera linea rompe la columna de texto a proposito. */
-  .linea--rompe > span {
-    margin-left: 2.2em;
+  .linea--rompe {
+    text-align: right;
   }
 
   .apoyo {
@@ -223,7 +226,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   .datos {
     position: relative;
     z-index: 3;
-    --halo: 10px;
+    --halo: 0px;
+    /* La tarjeta mide lo que mide su contenido: en tablet la fila de la
+       rejilla es mas alta que ella y, sin esto, se estiraba a toda la fila con
+       los datos separados por huecos. */
+    align-self: start;
     display: grid;
     gap: 8px;
     background: var(--miel);
@@ -231,6 +238,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     padding: 10px 16px;
     box-shadow:
       0 0 0 var(--halo) rgba(242, 193, 94, 0.55),
+      0 0 46px 6px rgba(242, 193, 94, 0.5),
       0 24px 40px -24px rgba(28, 34, 31, 0.35);
   }
   .dato {
@@ -266,17 +274,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   @media (min-width: 900px) {
     .portada {
-      grid-template-columns: 1.25fr 1fr;
+      grid-template-columns: 1.15fr 1fr;
       grid-template-rows: 1fr auto;
       align-items: end;
+      align-content: end;
       padding: 56px 64px 64px;
       column-gap: 48px;
     }
     .portada__texto {
       grid-column: 1;
       grid-row: 1 / span 2;
-      align-self: center;
-      max-width: 26rem;
+      align-self: end;
+      max-width: 100%;
     }
     .titular {
       font-size: clamp(4rem, 7.6vw, 6.2rem);
@@ -285,11 +294,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       grid-column: 2;
       grid-row: 1;
       align-self: end;
-      max-width: 30rem;
+      max-width: none;
+      justify-self: stretch;
     }
     .acciones {
       grid-column: 2;
       grid-row: 2;
+    }
+    /* Un boton nunca parte su texto: si los dos no caben en la fila, el
+       segundo baja completo. */
+    .acciones :global(.boton) {
+      white-space: nowrap;
     }
     .luz {
       left: auto;
@@ -339,11 +354,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     from {
       box-shadow:
         0 0 0 0 rgba(242, 193, 94, 0),
+        0 0 0 0 rgba(242, 193, 94, 0),
         0 24px 40px -24px rgba(28, 34, 31, 0.35);
     }
     to {
       box-shadow:
-        0 0 0 10px rgba(242, 193, 94, 0.55),
+        0 0 0 0 rgba(242, 193, 94, 0),
+        0 0 46px 6px rgba(242, 193, 94, 0.5),
         0 24px 40px -24px rgba(28, 34, 31, 0.35);
     }
   }
