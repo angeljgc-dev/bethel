@@ -30,7 +30,7 @@ const cuidado = [NINOS.protocolo, NINOS.dosAdultos].filter(Boolean) as string[];
 const hayResponsables = NINOS.responsables.length > 0;
 ---
 
-<section class="ninos" id="ninos" aria-labelledby="ninos-titulo">
+<section class="ninos caja" id="ninos" aria-labelledby="ninos-titulo">
   <div class="ninos__luz" aria-hidden="true"></div>
 
   <div class="ninos__caja">
@@ -92,7 +92,7 @@ const hayResponsables = NINOS.responsables.length > 0;
        dentro de la luz y su contraste sobre el fondo real bajaba a 6.73, por
        debajo del piso de 7. Ahora el degradado termina a 72 px y el primer
        texto empieza a 84. */
-    padding: 84px 20px 40px;
+    padding-block: 84px 40px;
     overflow: clip;
     isolation: isolate;
   }
@@ -153,7 +153,7 @@ const hayResponsables = NINOS.responsables.length > 0;
 
   @media (min-width: 900px) {
     .ninos {
-      padding: 152px 64px 104px;
+      padding-block: 152px 104px;
     }
     .ninos__luz {
       height: 132px;
@@ -168,16 +168,19 @@ const hayResponsables = NINOS.responsables.length > 0;
     gap: inherit;
   }
   @media (min-width: 900px) {
+    /* Las dos columnas no pasan de la medida de lectura: con el contenedor
+       puesto, la columna de la derecha llegaba a 636 px y 79 caracteres. */
+    .ninos__cabeza,
+    .ninos__cuerpo {
+      max-width: 34rem;
+    }
     .ninos__caja {
-      max-width: 72rem;
+      /* El ancho lo pone el contenedor de la seccion, no la caja. */
+      max-width: none;
       display: grid;
       grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
       column-gap: 64px;
       align-items: start;
-    }
-    .ninos__cabeza {
-      position: sticky;
-      top: 120px;
     }
   }
 </style>

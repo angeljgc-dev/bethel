@@ -30,7 +30,7 @@ const parrafos = [
 ].filter(Boolean) as string[];
 ---
 
-<section class="llegar" id="llegar" aria-labelledby="llegar-titulo">
+<section class="llegar caja" id="llegar" aria-labelledby="llegar-titulo">
   <div class="llegar__cabeza">
     <p class="rotulo">Si nunca has venido · 1 de 7</p>
     <h2 id="llegar-titulo">¿Por dónde entro?</h2>
@@ -75,7 +75,7 @@ const parrafos = [
     z-index: 2;
     background: var(--porton);
     color: var(--cal-porton);
-    padding: 56px 20px 64px;
+    padding-block: 56px 64px;
     display: grid;
     gap: 26px;
   }
@@ -112,7 +112,7 @@ const parrafos = [
 
   @media (min-width: 900px) {
     .llegar {
-      padding: 88px 64px;
+      padding-block: 88px;
       grid-template-columns: 1.1fr 1fr;
       column-gap: 64px;
       align-items: start;

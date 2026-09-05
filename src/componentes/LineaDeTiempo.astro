@@ -38,7 +38,7 @@ const termina = finDe(domingo);
 ---
 
 <section
-  class="minutos"
+  class="minutos caja"
   id="minutos"
   aria-labelledby="minutos-titulo"
   data-total={total}
@@ -82,15 +82,20 @@ const termina = finDe(domingo);
   .minutos {
     background: var(--techo);
     color: var(--cal-porton);
-    padding: 40px 20px 48px;
+    padding-block: 40px 48px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
     overflow: clip;
   }
+  /* Fijada, la sección mide una pantalla y el bloque entero (titular, riel,
+     contador y tarjetas) se centra en ella. El aire de arriba y el de abajo son
+     el mismo número para que el centrado sea exacto: con 40 y 72 el bloque
+     quedaba 16 px por encima del centro. */
   :global(html[data-anima]) .minutos {
     height: calc(100svh - var(--barra));
     align-content: center;
+    padding-block: 24px;
   }
 
   .minutos h3 {
@@ -154,7 +159,10 @@ const termina = finDe(domingo);
     display: grid;
     gap: 14px;
   }
+  /* En reposo la tarjeta es un párrafo de lectura y no una banda: sin tope, a
+     1920 el texto del tramo salía a 212 caracteres por renglón. */
   .tramo {
+    max-width: 34rem;
     background: rgba(243, 237, 227, 0.06);
     border: 1px solid rgba(243, 237, 227, 0.18);
     border-radius: 14px;
@@ -173,18 +181,16 @@ const termina = finDe(domingo);
     color: var(--cal-porton);
   }
 
-  /* Con la coreografía puesta la misma lista es una pista horizontal. El margen
-     negativo saca la pista del padding de la sección para que las tarjetas
-     lleguen al borde de la pantalla; la cabecera y el riel se quedan dentro del
-     padding, que es lo que antes se perdía cuando la sección entera renunciaba
-     a su padding derecho. Lo que sobresale lo recorta el overflow de la
-     sección. */
+  /* Con la coreografía puesta la misma lista es una pista horizontal. Lo que
+     sobresale de la caja lo recorta el overflow de la sección.
+
+     Ya no lleva el margen negativo con el padding compensado que tenía antes:
+     existía para meter el margen derecho dentro de scrollWidth, y el recorrido
+     ya no se calcula con scrollWidth sino con el borde de la última tarjeta. */
   :global(html[data-anima]) .pista {
     display: flex;
     grid-template-columns: none;
     gap: 16px;
-    margin-right: -20px;
-    padding-right: 20px;
     will-change: transform;
   }
   /* El ancho de la tarjeta ES el recorrido del pin: seis tarjetas de 78vw piden
@@ -204,13 +210,6 @@ const termina = finDe(domingo);
   }
 
   @media (min-width: 900px) {
-    .minutos {
-      padding: 40px 64px 72px;
-    }
-    :global(html[data-anima]) .pista {
-      margin-right: -64px;
-      padding-right: 64px;
-    }
     .riel {
       max-width: none;
     }

@@ -34,7 +34,7 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
         misma celosía. Nadie nota que faltó algo, y no hay texto de carga. */}
     <div class="momento" data-momento aria-hidden="true"></div>
 
-    <div class="quienes__banda">
+    <div class="quienes__banda caja">
       <p class="rotulo">Quiénes somos</p>
       <h2 id="quienes-titulo">{IGLESIA.denominacionExplicada}</h2>
     </div>
@@ -43,7 +43,7 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
 
 {
   hayCola && (
-    <section class="quienes__cola" aria-label="La historia y la gente">
+    <section class="quienes__cola caja" aria-label="La historia y la gente">
       {IGLESIA.historia && <p class="quienes__historia">{IGLESIA.historia}</p>}
 
       {hayGente && (
@@ -60,7 +60,7 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
   )
 }
 
-<section class="quienes__mision" aria-label="Su misión">
+<section class="quienes__mision caja" aria-label="Su misión">
   <blockquote>
     <p>{IGLESIA.mision}</p>
     <cite>{IGLESIA.nombreCompleto}</cite>
@@ -113,9 +113,10 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
     position: relative;
     z-index: 1;
     background: var(--techo);
-    /* El umbral que la envuelve ya pone el margen lateral: aqui solo el
-       vertical, o el rotulo queda al doble de margen que el resto. */
-    padding: 22px 0 26px;
+    /* La banda pone su propia sangría lateral con .caja, en los dos estados. El
+       envoltorio del umbral no pone ninguna: con la coreografía puesta la banda
+       queda dentro de otro envoltorio y el rótulo se iba a x=0. */
+    padding-block: 22px 26px;
     display: grid;
     gap: 8px;
   }
@@ -133,7 +134,7 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
   .quienes__mision {
     background: var(--techo);
     color: var(--cal-porton);
-    padding: 8px 20px 28px;
+    padding-block: 8px 28px;
     display: grid;
     gap: 26px;
   }
@@ -182,11 +183,11 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
 
   @media (min-width: 900px) {
     .quienes__banda {
-      padding: 28px 0 34px;
+      padding-block: 28px 34px;
     }
     .quienes__cola,
     .quienes__mision {
-      padding: 16px 64px 88px;
+      padding-block: 16px 88px;
     }
     .quienes__rejilla {
       grid-template-columns: repeat(4, 1fr);
@@ -198,12 +199,17 @@ const hayCola = Boolean(IGLESIA.historia) || hayGente;
     .quienes__banda {
       max-width: none;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      /* La columna del rótulo no pasa de 16 rem: con 1fr / 2fr la rejilla se
+         repartía el ancho entero y a 1920 la frase empezaba a 672 px del
+         rótulo. */
+      grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
       column-gap: 48px;
       align-items: start;
     }
+    /* Es un titular: de 34 a 40 caracteres por renglón a su tamaño. Medido,
+       27ch de esta letra son 39 caracteres. */
     .quienes__banda h2 {
-      max-width: none;
+      max-width: 27ch;
     }
     .quienes__cola {
       max-width: none;

@@ -41,7 +41,11 @@ const whatsapp = enlaceWhatsApp(IGLESIA.whatsapp, mensajeGeneral(IGLESIA.marca))
     flex-direction: column;
     justify-content: center;
     gap: 6px;
-    padding: 6px 16px;
+    /* La barra es de borde a borde, pero lo que lleva dentro se queda en la
+       misma columna de contenido que el resto de la pagina. Conserva sus 16 px
+       de aire lateral en telefono, que es lo que su alto medido supone. */
+    padding-block: 6px;
+    padding-inline: max(16px, (100% - var(--contenido)) / 2);
     background: var(--cal);
     border-bottom: 1px solid rgba(28, 34, 31, 0.16);
   }
@@ -82,7 +86,7 @@ const whatsapp = enlaceWhatsApp(IGLESIA.whatsapp, mensajeGeneral(IGLESIA.marca))
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 0 16px;
+      padding-block: 0;
     }
     .barra__dato {
       white-space: nowrap;

@@ -189,7 +189,24 @@ export function coreografia(gsap: Gsap): void {
       const tarjetas = [...pista.querySelectorAll<HTMLElement>(".tramo")];
       const sol = minutos.querySelector<HTMLElement>(".riel__sol");
       const contador = minutos.querySelector<HTMLElement>("[data-minuto]");
-      const viaje = () => Math.max(1, pista.scrollWidth - window.innerWidth + 20);
+      /* El recorrido: lo que hay que desplazar la pista para que la ultima
+         tarjeta quede entera y con el mismo margen que la primera tiene a la
+         izquierda, que es la sangria lateral de la seccion.
+
+         Antes se calculaba con pista.scrollWidth menos la pantalla mas 20 px
+         fijos. Chromium no cuenta el padding derecho de un flex en scrollWidth,
+         asi que ese 20 era el unico margen derecho que quedaba y no cambiaba con
+         el ancho: en escritorio, donde la sangria son 64, la ultima tarjeta
+         terminaba 44 px fuera de la pantalla, medido igual a 1024, 1280, 1440 y
+         1920. Se mide del DOM en cada refresh, que es cuando la sangria ya esta
+         resuelta. */
+      const sangria = () => parseFloat(getComputedStyle(minutos).paddingLeft) || 0;
+      const viaje = () => {
+        const ultima = tarjetas[tarjetas.length - 1];
+        if (!ultima) return 1;
+        const ancho = ultima.offsetLeft + ultima.offsetWidth - tarjetas[0].offsetLeft;
+        return Math.max(1, sangria() + ancho + sangria() - window.innerWidth);
+      };
 
       /* El mapa de anclajes: avance del scroll contra minuto del culto. Las
          ultimas tarjetas se descubren por la derecha y su borde izquierdo nunca

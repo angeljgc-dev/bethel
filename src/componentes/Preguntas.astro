@@ -22,7 +22,7 @@ import { enlaceWhatsApp, mensajeVisita } from "../lib/candado";
 const visita = enlaceWhatsApp(IGLESIA.whatsapp, mensajeVisita(IGLESIA.marca));
 ---
 
-<section class="preguntas" aria-label="Más preguntas de la primera visita">
+<section class="preguntas caja" aria-label="Más preguntas de la primera visita">
   <div class="preguntas__caja">
     <div class="pregunta">
       <p class="rotulo">Pregunta 4 de 7</p>
@@ -57,7 +57,7 @@ const visita = enlaceWhatsApp(IGLESIA.whatsapp, mensajeVisita(IGLESIA.marca));
   .preguntas {
     background: var(--techo);
     color: var(--cal-porton);
-    padding: 8px 20px 28px;
+    padding-block: 8px 28px;
   }
   .preguntas__caja {
     max-width: 34rem;
@@ -91,7 +91,9 @@ const visita = enlaceWhatsApp(IGLESIA.whatsapp, mensajeVisita(IGLESIA.marca));
 
   @media (min-width: 900px) {
     .preguntas {
-      padding: 8px 64px 88px;
+      /* El aire hasta la seccion siguiente no pasa de 64 px: es la ultima
+         subseccion del bloque de adentro, no un final de pagina. */
+      padding-block: 8px 64px;
     }
     .preguntas__caja {
       gap: 52px;
@@ -110,8 +112,16 @@ const visita = enlaceWhatsApp(IGLESIA.whatsapp, mensajeVisita(IGLESIA.marca));
     .preguntas__accion {
       grid-column: 1 / -1;
     }
+    /* Medida de lectura: con el contenedor puesto, cada columna llega a 608 px
+       a 1440 y a 1920, que son 74 caracteres. */
+    .pregunta p {
+      max-width: 34rem;
+    }
+    /* Medida de lectura. La unidad ch es el ancho del cero, mas ancho que el
+       caracter medio de esta letra: con 62ch el renglon salia de 92 caracteres
+       medidos, y el techo son 70. */
     .pregunta--dinero p {
-      max-width: 62ch;
+      max-width: 46ch;
     }
   }
 </style>

@@ -48,11 +48,11 @@ const dura = duracionEnHoras(domingo.minutos);
 {
   variante === "porton" ? (
     <div class="umbral umbral--porton">
-      <div class="umbral__porton" aria-hidden="true">
+      <div class="umbral__porton caja" aria-hidden="true">
         {COMO_LLEGAR.cruce && <p class="cruce">{COMO_LLEGAR.cruce}</p>}
       </div>
 
-      <section class="umbral__adentro" id="adentro" aria-labelledby="adentro-titulo">
+      <section class="umbral__adentro caja" id="adentro" aria-labelledby="adentro-titulo">
         <p class="rotulo">Ya adentro · 2 a 6 de 7</p>
         <h2 id="adentro-titulo">Esto es lo que va a pasar</h2>
         <p class="entrada">Un domingo normal, con tiempos. Para que no haya sorpresas.</p>
@@ -68,7 +68,7 @@ const dura = duracionEnHoras(domingo.minutos);
     </div>
   ) : (
     <div class="umbral umbral--luz">
-      <div class="umbral__previo" aria-hidden="true">
+      <div class="umbral__previo caja" aria-hidden="true">
         <p class="cruce">Se apaga la luz.</p>
       </div>
       <div class="umbral__luz">
@@ -96,7 +96,17 @@ const dura = duracionEnHoras(domingo.minutos);
   .umbral__previo,
   .umbral__luz {
     position: relative;
-    padding: 40px 20px;
+  }
+  /* La sangría lateral de los tres paneles con texto la pone .caja. El panel de
+     la luz no lleva ninguna: lo que va dentro (la banda de Quiénes somos) trae
+     la suya, y el canvas del momento va a pantalla completa. */
+  .umbral__porton,
+  .umbral__adentro,
+  .umbral__previo {
+    padding-block: 40px;
+  }
+  .umbral__luz {
+    padding: 0;
   }
 
   :global(html[data-anima]) .umbral__porton,
@@ -105,8 +115,12 @@ const dura = duracionEnHoras(domingo.minutos);
   :global(html[data-anima]) .umbral__luz {
     position: absolute;
     inset: 0;
-    padding: 24px 20px;
     overflow: clip;
+  }
+  :global(html[data-anima]) .umbral__porton,
+  :global(html[data-anima]) .umbral__adentro,
+  :global(html[data-anima]) .umbral__previo {
+    padding-block: 24px;
   }
   /* Adentro está debajo y el portón encima, que es el que se recorta. En la
      variante de la luz los papeles se cambian: el decorado abajo y el panel que
@@ -140,11 +154,6 @@ const dura = duracionEnHoras(domingo.minutos);
     display: grid;
     align-content: end;
   }
-  /* Sin la coreografía el panel de la luz no se recorta y no tiene por qué medir
-     una pantalla: es una sección más, apilada y completa. */
-  :global(html[data-anima]) .umbral__luz {
-    padding: 0;
-  }
   .cruce {
     font-family: var(--titular);
     font-weight: 600;
@@ -159,6 +168,12 @@ const dura = duracionEnHoras(domingo.minutos);
     display: grid;
     align-content: start;
     gap: 10px;
+  }
+  /* Fijado, el panel mide una pantalla y su texto se centra en ella. Alineado
+     arriba dejaba 160 px muertos entre el bloque de "3 horas" y el titular de la
+     línea de tiempo, medido a 1280. */
+  :global(html[data-anima]) .umbral__adentro {
+    align-content: center;
   }
   .umbral__adentro .rotulo {
     color: var(--luz);
@@ -190,17 +205,13 @@ const dura = duracionEnHoras(domingo.minutos);
   @media (min-width: 900px) {
     .umbral__porton,
     .umbral__adentro,
-    .umbral__previo,
-    .umbral__luz {
-      padding: 64px;
+    .umbral__previo {
+      padding-block: 64px;
     }
     :global(html[data-anima]) .umbral__porton,
     :global(html[data-anima]) .umbral__adentro,
     :global(html[data-anima]) .umbral__previo {
-      padding: 48px 64px;
-    }
-    :global(html[data-anima]) .umbral__luz {
-      padding: 0;
+      padding-block: 48px;
     }
   }
 </style>

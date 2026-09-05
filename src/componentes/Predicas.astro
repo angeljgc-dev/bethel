@@ -23,7 +23,7 @@ import { IGLESIA, PREDICAS } from "../datos/iglesia";
 const hay = PREDICAS.length > 0;
 ---
 
-<section class="predicas" id="predicas" aria-labelledby="predicas-titulo">
+<section class="predicas caja" id="predicas" aria-labelledby="predicas-titulo">
   <div class="predicas__cabeza">
     <p class="rotulo">Domingos grabados</p>
     <h2 id="predicas-titulo">Oye un domingo antes de venir</h2>
@@ -67,7 +67,7 @@ const hay = PREDICAS.length > 0;
   .predicas {
     background: var(--cal-sombra);
     color: var(--tinta);
-    padding: 28px 20px 28px;
+    padding-block: 28px;
     display: grid;
     gap: 12px;
   }
@@ -235,15 +235,16 @@ const hay = PREDICAS.length > 0;
 
   @media (min-width: 900px) {
     .predicas {
-      padding: 80px 64px 88px;
+      padding-block: 80px 88px;
     }
     .predicas__lista {
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
+    /* Medida de lectura: a 40 rem el renglon salia de 76 caracteres. */
     .predicas__cabeza,
     .predicas__pista {
-      max-width: 40rem;
+      max-width: 36rem;
     }
   }
 </style>

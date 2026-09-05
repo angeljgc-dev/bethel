@@ -27,7 +27,7 @@ const dura = duracionEnHoras(domingo.minutos);
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
-<section class="portada" id="inicio">
+<section class="portada caja" id="inicio">
   <div class="pared" aria-hidden="true">
     <div class="ventana"></div>
   </div>
@@ -73,6 +73,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     position: relative;
     min-height: 0;
     display: grid;
+    /* La columna se ata al ancho util: sin el tope, el contenido minimo de la
+       tarjeta ensanchaba la seccion 8 px por encima de la pantalla a 320. */
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto;
     /* La seccion mide lo que mide la pantalla; el contenido va centrado en
        vertical, junto, sin que la fila del medio se estire para rellenar. */
@@ -80,7 +83,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     /* Ritmo apretado a proposito: los dos botones tienen que caber en la
        primera pantalla de un telefono con la banda de borrador puesta. */
     gap: 10px;
-    padding: 8px 20px 10px;
+    /* La sangria lateral la pone .caja; aqui solo el ritmo vertical. */
+    padding-block: 8px 10px;
     /* clip y NO hidden. Con overflow: hidden esta seccion es un contenedor de
        scroll, y la tarjeta del horario lleva dentro el id #horario, que es el
        destino del enlace de salto "Ir al horario y la direccion". Al saltar,
@@ -175,7 +179,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
        envuelve dentro del bloque en vez de salirse de el. */
     width: fit-content;
     max-width: 100%;
-    padding: 14px 18px 12px;
+    /* 14 y no 18 de aire lateral: a 320, con la seccion ya atada al ancho de la
+       pantalla, quedaban 244 px para el titular y "Aquí se puede" pide 248. Con
+       18 px la primera linea se partia y el titular pasaba de tres renglones a
+       cuatro. */
+    padding: 14px 14px 12px;
   }
   /* Las dos hojas de cal. Son dos porque el titular es width: max-content y se
      sale de la columna a proposito. */
@@ -274,37 +282,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   @media (min-width: 900px) {
     .portada {
-      grid-template-columns: 1.15fr 1fr;
-      grid-template-rows: 1fr auto;
-      align-items: end;
-      align-content: end;
-      padding: 56px 64px 64px;
-      column-gap: 48px;
+      /* Apilada, la portada mide mas de alto que en dos columnas: con 56 y 64
+         de aire el segundo boton se salia de la primera pantalla a 1024x768. */
+      padding-block: 24px;
     }
     .portada__texto {
-      grid-column: 1;
-      grid-row: 1 / span 2;
-      align-self: end;
-      max-width: 100%;
+      padding-inline: 18px;
     }
     .titular {
       font-size: clamp(4rem, 7.6vw, 6.2rem);
-    }
-    .datos {
-      grid-column: 2;
-      grid-row: 1;
-      align-self: end;
-      max-width: none;
-      justify-self: stretch;
-    }
-    .acciones {
-      grid-column: 2;
-      grid-row: 2;
-    }
-    /* Un boton nunca parte su texto: si los dos no caben en la fila, el
-       segundo baja completo. */
-    .acciones :global(.boton) {
-      white-space: nowrap;
     }
     .luz {
       left: auto;
@@ -315,6 +301,56 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     .ventana {
       width: 50vw;
       height: 70vh;
+    }
+  }
+
+  /* De 900 a 1200 la portada sigue apilada como en tableta, con la tarjeta a
+     todo el ancho de la columna de contenido. Medido: en dos columnas a 1024 la
+     tarjeta se queda en 302 px y la direccion se parte en "Los / Robles
+     Oriente"; apilada, la direccion y la nota caben cada una en un renglon.
+
+     El reparto en dos columnas entra a 1200, que es donde la tarjeta llega a
+     446 px y la direccion vuelve a caber entera. El titular baja de 7.6vw a
+     6.9vw en ese tramo por la misma razon: su ancho de contenido es el minimo
+     de la primera columna, o sea que cada pixel que ocupa se lo quita a la
+     tarjeta. */
+  @media (min-width: 1200px) {
+    .portada {
+      padding-block: 56px 64px;
+      grid-template-columns: 1.15fr 1fr;
+      grid-template-rows: 1fr auto;
+      align-items: end;
+      align-content: end;
+      column-gap: 48px;
+    }
+    .portada__texto {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: end;
+      max-width: 100%;
+    }
+    .titular {
+      font-size: clamp(4rem, 6.9vw, 6.2rem);
+    }
+    /* La columna de la tarjeta no pasa de 32 rem: mas ancha, la hora y la
+       direccion quedan nadando en su propia caja. */
+    .datos,
+    .acciones {
+      grid-column: 2;
+      max-width: 32rem;
+      justify-self: end;
+    }
+    .datos {
+      grid-row: 1;
+      align-self: end;
+    }
+    .acciones {
+      grid-row: 2;
+    }
+    /* Un boton nunca parte su texto: si los dos no caben en la fila, el
+       segundo baja completo. */
+    .acciones :global(.boton) {
+      white-space: nowrap;
     }
   }
 

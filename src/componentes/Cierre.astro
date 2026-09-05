@@ -32,12 +32,15 @@ const redes = [
 const anio = new Date().getFullYear();
 ---
 
-<footer class="cierre" id="cierre" aria-labelledby="cierre-titulo">
+<footer class="cierre caja" id="cierre" aria-labelledby="cierre-titulo">
   <div class="cierre__placa">
     <p class="rotulo">Hasta el domingo</p>
     <h2 id="cierre-titulo">
       {domingo.dia}s, de {domingo.hora} a {fin}.<br />{IGLESIA.calle}, {IGLESIA.colonia}.
     </h2>
+  </div>
+
+  <div class="cierre__resto">
     <div class="cierre__acciones">
       <Boton href={whatsapp} variante="whatsapp" aviso="se abre en WhatsApp">WhatsApp</Boton>
       <Boton
@@ -49,9 +52,8 @@ const anio = new Date().getFullYear();
         Guardar en mi calendario
       </Boton>
     </div>
-  </div>
 
-  <div class="cierre__rejilla">
+    <div class="cierre__rejilla">
     <section class="cierre__bloque cierre__bloque--ancho" aria-labelledby="cierre-escribenos">
       <h3 id="cierre-escribenos">Escríbenos</h3>
       <ul class="cierre__enLinea">
@@ -106,6 +108,7 @@ const anio = new Date().getFullYear();
       </p>
       <p><a href={`${base}/privacidad/`}>Aviso de privacidad</a></p>
     </section>
+    </div>
   </div>
 
   <p class="cierre__firma">
@@ -125,9 +128,15 @@ const anio = new Date().getFullYear();
   .cierre {
     background: var(--porton);
     color: var(--cal-porton);
-    padding: 28px 20px 20px;
+    padding-block: 28px 20px;
     display: grid;
     gap: 16px;
+  }
+  /* Las acciones y la rejilla de contacto son un solo bloque: en escritorio van
+     a la derecha de la placa y en teléfono siguen apiladas debajo. */
+  .cierre__resto {
+    display: grid;
+    gap: inherit;
   }
   .cierre .rotulo {
     color: var(--luz-clara);
@@ -196,7 +205,7 @@ const anio = new Date().getFullYear();
     font-weight: 700;
   }
   .cierre__bloque p {
-    max-width: 36rem;
+    max-width: 34rem;
   }
   .cierre__pista {
     color: var(--luz-clara);
@@ -236,8 +245,34 @@ const anio = new Date().getFullYear();
 
   @media (min-width: 900px) {
     .cierre {
-      padding: 80px 64px 48px;
+      padding-block: 80px 48px;
       gap: 40px;
+    }
+  }
+
+  /* La placa tipográfica a la izquierda y todo lo demás a la derecha,
+     arrancando las dos a la misma altura. Antes la placa ocupaba media pantalla
+     de alto con el resto del ancho vacío a su derecha.
+
+     Entra a 1200 y no a 900: con la placa en sus 36 rem, la columna derecha no
+     llega a 420 px hasta ahí, y por debajo de eso la rejilla de contacto se
+     parte en columnas de 100 px. Y dentro del reparto la rejilla baja de cuatro
+     columnas a dos, que es lo que cabe en media pantalla. */
+  @media (min-width: 1200px) {
+    .cierre {
+      grid-template-columns: minmax(0, 36rem) minmax(0, 1fr);
+      column-gap: 64px;
+      align-items: start;
+    }
+    .cierre__placa {
+      max-width: 36rem;
+    }
+    .cierre__rejilla {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .cierre__firma,
+    .cierre__creditos {
+      grid-column: 1 / -1;
     }
   }
 </style>

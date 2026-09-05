@@ -44,7 +44,7 @@ const lineas = lineasDeInvitacion(datos).filter((l) => l.trim());
 const conResalte = 2;
 ---
 
-<section class="invitar" id="invitar" aria-labelledby="invitar-titulo">
+<section class="invitar caja" id="invitar" aria-labelledby="invitar-titulo">
   <Cortina />
   <div class="invitar__franja" aria-hidden="true"></div>
 
@@ -112,7 +112,7 @@ const conResalte = 2;
     position: relative;
     background: var(--cal);
     color: var(--tinta);
-    padding: 72px 20px 28px;
+    padding-block: 72px 28px;
     overflow: clip;
   }
   /* La franja del techo que la cortina tapa. Va vacia: debajo de la cortina no
@@ -192,7 +192,7 @@ const conResalte = 2;
 
   @media (min-width: 900px) {
     .invitar {
-      padding: 160px 64px 88px;
+      padding-block: 160px 88px;
     }
     .invitar__franja {
       height: 160px;
@@ -205,16 +205,18 @@ const conResalte = 2;
     gap: inherit;
   }
   @media (min-width: 900px) {
+    /* La misma medida de lectura que en Con los ninos. */
+    .invitar__cabeza,
+    .invitar__cuerpo {
+      max-width: 34rem;
+    }
     .invitar__caja {
-      max-width: 72rem;
+      /* El ancho lo pone el contenedor de la seccion, no la caja. */
+      max-width: none;
       display: grid;
       grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
       column-gap: 64px;
       align-items: start;
-    }
-    .invitar__cabeza {
-      position: sticky;
-      top: 120px;
     }
   }
 </style>
